@@ -37,7 +37,6 @@ DB_PASSWORD=
 ### php artisan migrate --seed
 
 
-
 ## Execute o build do Vite
 ### npm run build
 
