@@ -1,16 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Lateral com Ícones</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/heroicons@1.0.6/dist/heroicons.min.css">
+    <style>
+        .submenu {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .submenu.open {
+            max-height: 200px;
+            opacity: 1;
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .transition-transform {
+            transition: transform 0.3s ease-out;
+        }
+    </style>
 </head>
 <body>
     <div class="flex">
         <!-- Menu Lateral -->
-        <div class="w-60 bg-gray-800 text-white h-screen">
+        <div class="w-56 bg-gray-800 text-white h-screen">
             <ul class="list-none p-0 m-0">
                 <li class="border-b border-gray-700">
                     <a class="block p-4 hover:bg-gray-700 flex items-center cursor-pointer">
@@ -37,17 +55,12 @@
                     </a>
                 </li>
                 <li class="border-b border-gray-700">
-                    <a class="block p-4 hover:bg-gray-700 flex items-center cursor-pointer">
-                        <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M4 6h16M4 14h16m-8 4h8M4 18h8m-4-8v4"></path></svg>
-                        Vagas
-                    </a>
-                </li>
-                <li class="border-b border-gray-700">
                     <a id="toggleOutros" class="block p-4 hover:bg-gray-700 cursor-pointer flex items-center">
                         <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         Outros
+                        <svg id="arrowIcon" class="h-5 w-5 ml-auto transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </a>
-                    <ul id="subMenuOutros" class="list-none pl-4 hidden">
+                    <ul id="subMenuOutros" class="submenu pl-6">
                         <li><a class="block p-4 hover:bg-gray-600">Subitem 1</a></li>
                         <li><a class="block p-4 hover:bg-gray-600">Subitem 2</a></li>
                     </ul>
@@ -64,7 +77,9 @@
     <script>
         document.getElementById('toggleOutros').addEventListener('click', function() {
             const subMenu = document.getElementById('subMenuOutros');
-            subMenu.classList.toggle('hidden');
+            const arrowIcon = document.getElementById('arrowIcon');
+            subMenu.classList.toggle('open');
+            arrowIcon.classList.toggle('rotate-180');
         });
     </script>
 </body>
