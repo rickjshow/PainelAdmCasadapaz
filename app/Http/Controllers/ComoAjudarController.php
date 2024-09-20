@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class BannersController extends Controller
+class ComoAjudarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('banners.index');
+        return view('como_ajudar.index');
     }
 
     /**

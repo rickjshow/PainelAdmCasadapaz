@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto mt-4">
-        <h2 class="text-2xl font-bold mb-4">Pagina Galeria</h2>
+        <h2 class="text-2xl font-bold mb-4">Pagina Sobre Nos</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <!-- Card 1 -->
