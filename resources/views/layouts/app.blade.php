@@ -25,13 +25,13 @@
 
         <!-- Page Content -->
         <main>
-            <div class="flex min-h-screen bg-gray-100">
+            <div class="flex min-h-screen">
                 <!-- Menu Lateral -->
-                <x-menu-lateral class="w-64 bg-gray-800 text-white" />
+                <x-menu-lateral class="w-64 bg-gray-800 text-white h-screen" />
 
                 <!-- Conteúdo da Página -->
-                <div class="flex-1 p-6">
-                    @yield('content')
+                <div class="flex-1 p-6 overflow-y-auto">
+                    {{$slot}}
                 </div>
             </div>
         </main>
