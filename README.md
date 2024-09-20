@@ -32,9 +32,9 @@ DB_DATABASE=casadapaz
 DB_USERNAME=root
 DB_PASSWORD=
 
+
 ## Em seguida você deve configurar o arquivo .env e rodar as migrations com:
 ### php artisan migrate --seed
-
 
 
 ## Execute o build do Vite
