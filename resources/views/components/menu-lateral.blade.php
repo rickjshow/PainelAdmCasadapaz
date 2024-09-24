@@ -7,7 +7,12 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
         .submenu {
             transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
             max-height: 0;
@@ -24,21 +29,21 @@
         .transition-transform {
             transition: transform 0.3s ease-out;
         }
-        /* Remove o sublinhado e a cor azul ao passar o mouse */
+
         a {
             text-decoration: none;
-            color: white; /* Cor do texto padrão */
+            color: white;
         }
         a:hover {
-            text-decoration: none; /* Remove o sublinhado ao passar o mouse */
-            background-color: #4b5563; /* Cor de fundo ao passar o mouse */
+            text-decoration: none;
+            background-color: #4b5563;
         }
     </style>
 </head>
-<body class="bg-gray-100 h-screen overflow-hidden">
+<body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Menu Lateral -->
-        <div class="w-56 bg-gray-800 text-white h-screen">
+        <div class="w-56 bg-gray-800 text-white h-full"> <!-- h-full para ocupar 100% da altura -->
             <ul class="list-none p-0 m-0">
                 <li class="border-b border-gray-700">
                     <a href="{{ route('sobre-nos.index') }}" class="block p-4 flex items-center cursor-pointer">
@@ -84,7 +89,7 @@
                 </li>
             </ul>
         </div>
-    </div>
+
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>

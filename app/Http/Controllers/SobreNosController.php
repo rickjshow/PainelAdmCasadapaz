@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Nossaequipe;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 
 class SobreNosController extends Controller
@@ -11,7 +13,9 @@ class SobreNosController extends Controller
      */
     public function index()
     {
-        return view('sobre_nos.index');
+            $equipes = Nossaequipe::all();
+            return view('sobre_nos.index', compact('equipes'));
+
     }
 
     /**

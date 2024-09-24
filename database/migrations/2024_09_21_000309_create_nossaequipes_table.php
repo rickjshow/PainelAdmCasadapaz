@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sobrenos', function (Blueprint $table) {
+        Schema::create('nossaequipes', function (Blueprint $table) {
             $table->id();
-            $table->binary('banner_principal');
-            $table->binary('imagem_missao');
-            $table->string('sobre');
-            $table->string('no_que_acreditamos');
-            $table->string('atividades');
-            $table->string('recursos');
-            $table->string('sede');
+            $table->binary('foto');
+            $table->string('nome');
+            $table->string('cargo');
+            $table->string('profissao');
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sobrenos');
+        Schema::dropIfExists('nossaequipes');
     }
 };
