@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('sobrenos', function (Blueprint $table) {
             $table->id();
-            $table->binary('banner_principal');
-            $table->binary('imagem_missao');
-            $table->string('sobre');
-            $table->string('no_que_acreditamos');
-            $table->string('atividades');
-            $table->string('recursos');
-            $table->string('sede');
+            $table->binary('banner_principal')->nullable();
+            $table->binary('banner_principal_mobile')->nullable();
+            $table->binary('imagem_missao')->nullable();
+            $table->text('sobre');
+            $table->text('no_que_acreditamos');
+            $table->text('atividades');
+            $table->text('recursos');
+            $table->text('sede');
             $table->timestamps();
         });
     }
