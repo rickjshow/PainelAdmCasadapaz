@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class NossaEquipeController extends Controller
 {
-    public function index()
-    {
-    }
+    public function index() {}
 
     public function create()
     {
@@ -22,20 +20,21 @@ class NossaEquipeController extends Controller
     {
         try {
             $request->validate([
-                'foto' => 'nullable|image|max:2048',
+                'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:4096',
                 'nome' => 'required|string|max:255',
                 'cargo' => 'required|string|max:255',
                 'profissao' => 'required|string|max:255',
             ]);
 
-            $foto = null;
+            $fotoBlob = null;
             if ($request->hasFile('foto')) {
-                $fotoPath = $request->file('foto')->store('fotos'); // Armazenando em storage/app/fotos
-                $foto = basename($fotoPath);
+                $fotoPath = $request->file('foto')->store('fotos');
+                // Lê o conteúdo da imagem para armazenar como BLOB
+                $fotoBlob = file_get_contents($request->file('foto')->getRealPath());
             }
 
             Nossaequipe::create([
-                'foto' => $foto,
+                'foto' => $fotoBlob,
                 'nome' => $request->nome,
                 'cargo' => $request->cargo,
                 'profissao' => $request->profissao,
@@ -44,21 +43,25 @@ class NossaEquipeController extends Controller
             return redirect()->route('equipe.index')->with('success', 'Membro adicionado com sucesso!');
         } catch (\Exception $e) {
             Log::error('Erro ao adicionar membro: ' . $e->getMessage());
-            return back()->withErrors('Erro ao adicionar o membro.');
+            return back()->withErrors('Erro ao adicionar o membro: ' . $e->getMessage());
         }
     }
 
-    public function exibirImagem($filename)
+    public function exibirImagem($id)
     {
-        $path = 'private/fotos/' . $filename;
+        $equipe = Nossaequipe::findOrFail($id);
 
-        if (!Storage::exists($path)) {
+        if (!$equipe || !$equipe->foto) {
             abort(404);
         }
 
-        return response()->file(Storage::path($path));
+        return response()->stream(function () use ($equipe) {
+            echo $equipe->foto;
+        }, 200, [
+            'Content-Type' => 'image/jpeg',
+            'Content-Disposition' => 'inline; filename="foto.jpg"',
+        ]);
     }
-
 
     public function edit(Nossaequipe $nossaEquipe)
     {
@@ -67,7 +70,6 @@ class NossaEquipeController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $nossaEquipe = Nossaequipe::findOrFail($id);
 
         try {
@@ -78,10 +80,10 @@ class NossaEquipeController extends Controller
                 'profissao' => 'required|string|max:255',
             ]);
 
-            $foto = $nossaEquipe->foto; // Mantém a foto antiga se não houver nova
+            $foto = $nossaEquipe->foto;
+
             if ($request->hasFile('foto')) {
-                $fotoPath = $request->file('foto')->store('public/fotos');
-                $foto = basename($fotoPath);
+                $foto = file_get_contents($request->file('foto')->getRealPath());
             }
 
             $nossaEquipe->update([

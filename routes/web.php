@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NossaEquipeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -19,3 +20,4 @@ require base_path('routes/contato.php');
 require base_path('routes/doacoes.php');
 require base_path('routes/galeria.php');
 require base_path('routes/premios.php');
+Route::get('/imagem/{id}', [NossaEquipeController::class, 'exibirImagem'])->name('exibir.imagem');
