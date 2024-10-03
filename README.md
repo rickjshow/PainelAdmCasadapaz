@@ -42,4 +42,6 @@ DB_PASSWORD=
 
 
 ## Para statar o servidor
-### php artisan serve
+### php artisan serve ou se for rodar o painel junto com o site usar o php artisan serve --port=8001
+
+
