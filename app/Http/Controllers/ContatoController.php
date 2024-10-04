@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contato;
 use Illuminate\Http\Request;
 
 class ContatoController extends Controller
@@ -11,7 +12,8 @@ class ContatoController extends Controller
      */
     public function index()
     {
-        return view('contato.index');
+        $contatos = Contato::all();
+        return view('contato.index', compact('contatos'));
     }
 
     /**
@@ -27,7 +29,14 @@ class ContatoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'contato' => 'required|string|max:255',
+        ]);
+
+        Contato::create($request->only('titulo', 'contato'));
+
+        return redirect()->route('contato.index')->with('success', 'Contato adicionado com sucesso!');
     }
 
     /**
