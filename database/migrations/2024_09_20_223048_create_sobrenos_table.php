@@ -16,6 +16,7 @@ return new class extends Migration
             $table->binary('banner_principal')->nullable();
             $table->binary('banner_principal_mobile')->nullable();
             $table->binary('imagem_missao')->nullable();
+            $table->text('missao');
             $table->text('sobre');
             $table->text('no_que_acreditamos');
             $table->text('atividades');
