@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('contatos', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
-            $table->string('contato');
             $table->string('whatsapp', 20);
             $table->string('instagram', 50);
             $table->string('fanpage', 50);
