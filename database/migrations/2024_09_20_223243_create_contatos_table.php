@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('contatos', function (Blueprint $table) {
             $table->id();
-<<<<<<< HEAD
             $table->string('titulo');
             $table->string('contato');
-=======
             $table->string('whatsapp', 20);
             $table->string('instagram', 50);
             $table->string('fanpage', 50);
@@ -24,7 +22,6 @@ return new class extends Migration
             $table->string('endereco_bazar',100);
             $table->string('instagram_bazar', 50);
             $table->string('email', 50);
->>>>>>> 0cfc3fe (Migratios contato e sobre ajustes de tabelas)
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('nossaequipes', function (Blueprint $table) {
             $table->id();
-            $table->binary('foto'); // Você pode manter isso para BLOB
+            $table->binary('foto');
             $table->string('nome');
             $table->string('cargo');
             $table->string('profissao');
