@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('whatsapp', 20);
             $table->string('instagram', 50);
             $table->string('fanpage', 50);
-            $table->string('endereco_sede,', 100);
+            $table->string('endereco_sede', 100);
             $table->string('endereco_bazar',100);
             $table->string('instagram_bazar', 50);
             $table->string('email', 50);
