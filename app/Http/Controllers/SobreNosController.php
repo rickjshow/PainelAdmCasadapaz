@@ -6,6 +6,7 @@ use App\Models\Nossaequipe;
 use App\Models\Sobrenos;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Container\Attributes\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class SobreNosController extends Controller
@@ -22,26 +23,12 @@ class SobreNosController extends Controller
     public function create()
     {
         
-    }
-
-    public function addImagens(Request $request)
-    {
-          
-    }
-
-    public function editImagens(Request $request, $id)
-    {
-
-    }
-
-    public function destroyImagens(string $id)
-    {
-
-    }
+    }   
 
     public function store(Request $request)
     {
         $validade = $request->validate([
+            'missao' => 'required|string',
             'sobre' => 'required|string',
             'no_que_acreditamos' => 'required|string',
             'atividades' => 'required|string',
@@ -49,16 +36,20 @@ class SobreNosController extends Controller
             'sede' => 'required|string'
         ]);
 
-        Sobrenos::create([
-            'sobre' => $validade['sobre'],
-            'no_que_acreditamos' => $validade['no_que_acreditamos'],
-            'atividades' => $validade['atividades'],
-            'recursos' => $validade['recursos'],
-            'sede' => $validade['sede']
-        ]);
+        $sobrenos = Sobrenos::first() ?? new Sobrenos();
+
+        $sobrenos->missao = $validade['missao'];
+        $sobrenos->sobre = $validade['sobre'];
+        $sobrenos->no_que_acreditamos = $validade['no_que_acreditamos'];
+        $sobrenos->atividades = $validade['atividades'];
+        $sobrenos->recursos = $validade['recursos'];
+        $sobrenos->sede = $validade['sede'];
+
+        $sobrenos->save();
 
         return redirect()->route('sobre-nos.index')->with('success', 'Descrições adicionadas com sucesso!');
     }
+
 
     public function show(string $id)
     {
@@ -82,6 +73,7 @@ class SobreNosController extends Controller
 
         $sobrenos = Sobrenos::findOrFail($id);
 
+        $sobrenos->missao = $request->input('missao');
         $sobrenos->sobre = $request->input('sobre');
         $sobrenos->no_que_acreditamos = $request->input('no_que_acreditamos');
         $sobrenos->atividades = $request->input('atividades');

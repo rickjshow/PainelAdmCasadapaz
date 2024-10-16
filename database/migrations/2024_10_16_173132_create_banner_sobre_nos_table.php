@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sobrenos', function (Blueprint $table) {
+        Schema::create('banner_sobre_nos', function (Blueprint $table) {
             $table->id();
-            $table->text('missao');
-            $table->text('sobre');
-            $table->text('no_que_acreditamos');
-            $table->text('atividades');
-            $table->text('recursos');
-            $table->text('sede');
+            $table->binary('banner_principal')->nullable();
+            $table->binary('banner_principal_mobile')->nullable();
+            $table->binary('imagem_missao')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sobrenos');
+        Schema::dropIfExists('banner_sobre_nos');
     }
 };

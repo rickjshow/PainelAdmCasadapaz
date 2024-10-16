@@ -12,8 +12,8 @@ class ContatoController extends Controller
      */
     public function index()
     {
-        $contatos = Contato::all();
-        return view('contato.index', compact('contatos'));
+        $content = Contato::all()->first();
+        return view('contato.index', compact('content'));
     }
 
     /**
@@ -29,14 +29,27 @@ class ContatoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'contato' => 'required|string|max:255',
+        $validade = $request->validate([
+            'whatsapp' => 'required|string',
+            'instagram' => 'required|string',
+            'fanpage' => 'required|string',
+            'email' => 'required|string',
+            'endereco_sede' => 'required|string',
+            'endereco_bazar' => 'required|string',
+            'instagram_bazar' => 'required|string'
         ]);
 
-        Contato::create($request->only('titulo', 'contato'));
+        Contato::create([
+            'whatsapp' => $validade['whatsapp'],
+            'instagram' => $validade['instagram'],
+            'fanpage' => $validade['fanpage'],
+            'email' => $validade['email'],
+            'endereco_sede' => $validade['endereco_sede'],
+            'endereco_bazar' => $validade['endereco_bazar'],
+            'instagram_bazar' => $validade['instagram_bazar']
+        ]);
 
-        return redirect()->route('contato.index')->with('success', 'Contato adicionado com sucesso!');
+        return redirect()->route('contato.index')->with('success', 'Contatos adicionados com sucesso!');
     }
 
     /**
@@ -60,8 +73,27 @@ class ContatoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'whatsapp' => 'required|string',
+            'instagram' => 'required|string',
+            'fanpage' => 'required|string',
+            'email' => 'required|string',
+            'endereco_sede' => 'required|string',
+            'endereco_bazar' => 'required|string',
+            'instagram_bazar' => 'required|string'
+        ]);
+    
+        // Find the existing record
+        $contato = Contato::findOrFail($id);
+    
+        // Update the record with validated data
+        $contato->update($validatedData);
+    
+        // Redirect with success message
+        return redirect()->route('contato.index')->with('success', 'Contatos atualizados com sucesso!');
     }
+    
 
     /**
      * Remove the specified resource from storage.

@@ -2,23 +2,18 @@
     <div class="container-fluid mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Sobre Nós</h2>
 
-        <form action="{{ isset($banners) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('banners.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @if(isset($sobrenos)) <!-- Verifique se a variável $sobrenos está definida -->
-            @method('PATCH') <!-- Use PATCH se houver dados -->
-            @else
-            @method('POST') <!-- Use POST se não houver dados -->
-            @endif
 
             <div class="row mb-4">
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4">
                         <h5 class="font-semibold text-lg mb-2">Banner Desktop</h5>
                         @if(isset($sobrenos->banner_desktop))
-                        <img src="{{ asset('storage/' . $sobrenos->banner_desktop) }}" alt="Banner Desktop" class="img-fluid mb-2" />
-                        <input type="checkbox" name="remove_banner_desktop" value="1"> Excluir Banner Desktop
+                            <img src="{{ asset('storage/' . $sobrenos->banner_desktop) }}" alt="Banner Desktop" class="img-fluid mb-2" style="max-width: 100px;" />
+                            <input type="checkbox" name="remove_banner_desktop" value="1"> Excluir Banner Desktop
                         @endif
-                        <input type="file" accept="image/*" name="banner_desktop" class="form-control mb-2" />
+                        <input type="file" accept="image/*" name="banner_principal" class="form-control mb-2" />
                     </div>
                 </div>
 
@@ -26,10 +21,10 @@
                     <div class="card shadow-md rounded-lg p-4">
                         <h5 class="font-semibold text-lg mb-2">Banner Mobile</h5>
                         @if(isset($sobrenos->banner_mobile))
-                        <img src="{{ asset('storage/' . $sobrenos->banner_mobile) }}" alt="Banner Mobile" class="img-fluid mb-2" />
-                        <input type="checkbox" name="remove_banner_mobile" value="1"> Excluir Banner Mobile
+                            <img src="{{ asset('storage/' . $sobrenos->banner_mobile) }}" alt="Banner Mobile" class="img-fluid mb-2" style="max-width: 100px;" />
+                            <input type="checkbox" name="remove_banner_mobile" value="1"> Excluir Banner Mobile
                         @endif
-                        <input type="file" accept="image/*" name="banner_mobile" class="form-control mb-2" />
+                        <input type="file" accept="image/*" name="banner_principal_mobile" class="form-control mb-2" />
                     </div>
                 </div>
             </div>
@@ -37,15 +32,14 @@
             <div class="card shadow-md rounded-lg p-4 mb-4">
                 <h5 class="font-semibold text-lg mb-2">Imagem da Missão</h5>
                 @if(isset($sobrenos->imagem_missao))
-                <img src="{{ asset('storage/' . $sobrenos->imagem_missao) }}" alt="Imagem da Missão" class="img-fluid mb-2" />
-                <input type="checkbox" name="remove_imagem_missao" value="1"> Excluir Imagem da Missão
+                    <img src="{{ asset('storage/' . $sobrenos->imagem_missao) }}" alt="Imagem da Missão" class="img-fluid mb-2" style="max-width: 100px;" />
+                    <input type="checkbox" name="remove_imagem_missao" value="1"> Excluir Imagem da Missão
                 @endif
                 <input type="file" accept="image/*" name="imagem_missao" class="form-control mb-2" />
             </div>
 
             <button type="submit" class="btn btn-success mb-4 mt-2">Salvar</button>
         </form>
-
 
         <form action="{{ isset($content) ? route('sobrenos.update', $content->id) : route('sobrenos.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -54,6 +48,12 @@
             @endif
 
             <div class="row mb-4 mt-4">
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">Missão</h5>
+                        <textarea name="missao" class="form-control" rows="3">{{ isset($content) ? $content->missao : '' }}</textarea>
+                    </div>
+                </div>
                 <div class="col-12 mb-3">
                     <div class="card shadow-md rounded-lg p-4">
                         <h5 class="font-semibold text-lg mb-2">Sobre a Casa da Paz</h5>
