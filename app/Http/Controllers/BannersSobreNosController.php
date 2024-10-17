@@ -10,82 +10,91 @@ class BannersSobreNosController extends Controller
 {
     public function index()
     {
-        $sobrenos = BannerSobreNos::all(); // Recuperar todos os banners
-        return view('sobre_nos.index', compact('sobrenos')); // Retornar a view com os banners
+        return view('sobre_nos.index'); // Retornar a view com os banners
     }
 
     public function store(Request $request)
-{
-    // Validar os arquivos enviados
-    $data = $request->validate([
-        'banner_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'banner_principal_mobile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'imagem_missao' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'remove_banner_principal' => 'nullable|boolean',
-        'remove_banner_principal_mobile' => 'nullable|boolean',
-        'remove_imagem_missao' => 'nullable|boolean',
-    ]);
-
-    // Recuperar o primeiro registro existente
-    $banner = BannerSobreNos::first();
-
-    if ($banner) {
-        // Atualizar banner existente
-        if ($request->hasFile('banner_principal')) {
-            $data['banner_principal'] = $request->file('banner_principal')->store('banners');
-        } elseif ($request->remove_banner_principal) {
-            Storage::delete($banner->banner_principal);
-            $data['banner_principal'] = null;
-        }
-
-        if ($request->hasFile('banner_principal_mobile')) {
-            $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
-        } elseif ($request->remove_banner_principal_mobile) {
-            Storage::delete($banner->banner_principal_mobile);
-            $data['banner_principal_mobile'] = null;
-        }
-
-        if ($request->hasFile('imagem_missao')) {
-            $data['imagem_missao'] = $request->file('imagem_missao')->store('banners');
-        } elseif ($request->remove_imagem_missao) {
-            Storage::delete($banner->imagem_missao);
-            $data['imagem_missao'] = null;
-        }
-
-        // Atualizar o banner existente
-        $banner->update($data);
-
-    } else {
-        // Criar um novo banner se nenhum existir
-        if ($request->hasFile('banner_principal')) {
-            $data['banner_principal'] = $request->file('banner_principal')->store('banners');
-        }
-        if ($request->hasFile('banner_principal_mobile')) {
-            $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
-        }
-        if ($request->hasFile('imagem_missao')) {
-            $data['imagem_missao'] = $request->file('imagem_missao')->store('banners');
-        }
-
-        // Verificar se pelo menos um arquivo foi enviado para criar o registro
-        if ($request->hasFile('banner_principal') || $request->hasFile('banner_principal_mobile') || $request->hasFile('imagem_missao')) {
-            BannerSobreNos::create($data);
-        } else {
-            return redirect()->route('sobre-nos.index')->with('error', 'Por favor, envie pelo menos um banner ou uma imagem da missão.');
-        }
-    }
-
-    return redirect()->route('sobre-nos.index')->with('success', 'Banner salvo com sucesso!');
-}
-
-    
-
-    public function destroy($id)
     {
-        $banner = BannerSobreNos::findOrFail($id);
-        Storage::delete([$banner->banner_principal, $banner->banner_principal_mobile, $banner->imagem_missao]);
-        $banner->delete();
 
-        return redirect()->route('sobre-nos.index')->with('success', 'Banner excluído com sucesso!');
-    }
+        $data = $request->validate([
+            'banner_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'banner_principal_mobile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagem_missao' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'remove_banner_principal' => 'nullable|boolean',
+            'remove_banner_principal_mobile' => 'nullable|boolean',
+            'remove_imagem_missao' => 'nullable|boolean',
+        ]);
+    
+        $banner = BannerSobreNos::first();
+    
+        if ($banner) {
+
+            if ($request->hasFile('banner_principal')) {
+
+                if ($banner->banner_principal) {
+                    Storage::delete($banner->banner_principal);
+                }
+
+                $data['banner_principal'] = $request->file('banner_principal')->store('banners');
+            } elseif ($request->remove_banner_principal) {
+
+                if ($banner->banner_principal) {
+                    Storage::delete($banner->banner_principal);
+                }
+                $data['banner_principal'] = null;
+            }
+    
+            if ($request->hasFile('banner_principal_mobile')) {
+
+                if ($banner->banner_principal_mobile) {
+                    Storage::delete($banner->banner_principal_mobile);
+                }
+
+                $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
+            } elseif ($request->remove_banner_principal_mobile) {
+
+                if ($banner->banner_principal_mobile) {
+                    Storage::delete($banner->banner_principal_mobile);
+                }
+                $data['banner_principal_mobile'] = null;
+            }
+    
+            if ($request->hasFile('imagem_missao')) {
+
+                if ($banner->imagem_missao) {
+                    Storage::delete($banner->imagem_missao);
+                }
+                // Armazenar nova imagem
+                $data['imagem_missao'] = $request->file('imagem_missao')->store('banners');
+            } elseif ($request->remove_imagem_missao) {
+
+                if ($banner->imagem_missao) {
+                    Storage::delete($banner->imagem_missao);
+                }
+                $data['imagem_missao'] = null;
+            }
+    
+            $banner->update($data);
+    
+        } else {
+
+            if ($request->hasFile('banner_principal')) {
+                $data['banner_principal'] = $request->file('banner_principal')->store('banners');
+            }
+            if ($request->hasFile('banner_principal_mobile')) {
+                $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
+            }
+            if ($request->hasFile('imagem_missao')) {
+                $data['imagem_missao'] = $request->file('imagem_missao')->store('banners');
+            }
+    
+            if ($request->hasFile('banner_principal') || $request->hasFile('banner_principal_mobile') || $request->hasFile('imagem_missao')) {
+                BannerSobreNos::create($data);
+            } else {
+                return redirect()->route('sobre-nos.index')->with('error', 'Por favor, envie pelo menos um banner ou uma imagem da missão.');
+            }
+        }
+    
+        return redirect()->route('sobre-nos.index')->with('success', 'Banner salvo com sucesso!');
+    }    
 }

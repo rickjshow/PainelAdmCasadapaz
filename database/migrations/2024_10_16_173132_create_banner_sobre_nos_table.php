@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -18,6 +19,10 @@ return new class extends Migration
             $table->binary('imagem_missao')->nullable();
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE banner_sobre_nos MODIFY banner_principal LONGBLOB');
+        DB::statement('ALTER TABLE banner_sobre_nos MODIFY banner_principal_mobile LONGBLOB');
+        DB::statement('ALTER TABLE banner_sobre_nos MODIFY imagem_missao LONGBLOB');
     }
 
     /**

@@ -10,8 +10,8 @@ class BannerSobreNos extends Model
     use HasFactory;
 
     protected $fillable = [
-        "banner_desktop",
-        "banner_mobile",
-        "banner_missao"
+        "banner_principal",
+        "banner_principal_mobile",
+        "imagem_missao"
     ];
 }

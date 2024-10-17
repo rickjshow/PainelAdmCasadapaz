@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerSobreNos;
 use App\Models\Nossaequipe;
 use App\Models\Sobrenos;
 use Illuminate\Auth\Events\Validated;
@@ -16,7 +17,8 @@ class SobreNosController extends Controller
     {
             $equipes = Nossaequipe::all();
             $content = Sobrenos::all()->first();
-            return view('sobre_nos.index', compact('equipes', 'content'));
+            $img = BannerSobreNos::all()->first();
+            return view('sobre_nos.index', compact('equipes', 'content', 'img'));
 
     }
 

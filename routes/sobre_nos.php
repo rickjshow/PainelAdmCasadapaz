@@ -19,4 +19,3 @@ Route::get('/sobre-nos/banners', [BannersSobreNosController::class, 'index'])->n
 Route::post('/sobre-nos/banners/store', [BannersSobreNosController::class, 'store'])->name('banners.store');
 Route::delete('/sobre-nos/banners/{id}', [BannersSobreNosController::class, 'destroy'])->name('banners.destroy');
 
-
