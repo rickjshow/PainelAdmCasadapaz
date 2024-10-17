@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('doacaos', function (Blueprint $table) {
             $table->id();
+            $table->string('banco');
+            $table->string('agencia');
+            $table->string('conta_corrente');
+            $table->string('cnpj', 14);
+            $table->string('titular');
+            $table->string('pix');
             $table->timestamps();
         });
     }

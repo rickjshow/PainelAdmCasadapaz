@@ -3,4 +3,6 @@
 use App\Http\Controllers\DoacoesController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/doacoes', [DoacoesController::class, 'index'])->name('doacoes.index');
+Route::get('/doacao', [DoacoesController::class, 'index'])->name('doacao.index');
+Route::post('/doacao/store', [DoacoesController::class, 'store'])->name('doacao.store');
+Route::post('doacao/{id}/edit', [DoacoesController::class, 'update'])->name('doacao.update');

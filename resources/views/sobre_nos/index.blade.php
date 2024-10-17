@@ -6,24 +6,23 @@
             @csrf
 
             <div class="row mb-4">
-                <!-- Banner Desktop -->
+
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4">
                         <h5 class="font-semibold text-lg mb-2">Banner Desktop</h5>
                         @if(isset($img) && $img->banner_principal)
-                            <img src="{{ asset('storage/' . $img->banner_principal) }}" alt="Banner Desktop" class="img-fluid mb-2" style="max-width: 400px;" />
+                            <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px;" />
                             <input type="checkbox" name="remove_banner_principal" value="1"> Excluir Banner Desktop
                         @endif
                         <input type="file" accept="image/*" name="banner_principal" class="form-control mb-2" />
                     </div>
                 </div>
 
-                <!-- Banner Mobile -->
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4">
                         <h5 class="font-semibold text-lg mb-2">Banner Mobile</h5>
                         @if(isset($img) && $img->banner_principal_mobile)
-                            <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" alt="Banner Mobile" class="img-fluid mb-2" style="max-width: 100px;" />
+                            <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 100px;" />
                             <input type="checkbox" name="remove_banner_principal_mobile" value="1"> Excluir Banner Mobile
                         @endif
                         <input type="file" accept="image/*" name="banner_principal_mobile" class="form-control mb-2" />
@@ -31,11 +30,10 @@
                 </div>
             </div>
 
-            <!-- Imagem da Missão -->
             <div class="card shadow-md rounded-lg p-4 mb-4">
                 <h5 class="font-semibold text-lg mb-2">Imagem da Missão</h5>
                 @if(isset($img) && $img->imagem_missao)
-                    <img src="{{ asset('storage/' . $img->imagem_missao) }}" alt="Imagem da Missão" class="img-fluid mb-2" style="max-width: 100px;" />
+                    <img src="{{ asset('storage/' . $img->imagem_missao) }}" class="img-fluid mb-2" style="max-width: 100px;" />
                     <input type="checkbox" name="remove_imagem_missao" value="1"> Excluir Imagem da Missão
                 @endif
                 <input type="file" accept="image/*" name="imagem_missao" class="form-control mb-2" />

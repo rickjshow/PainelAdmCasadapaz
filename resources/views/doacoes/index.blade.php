@@ -1,47 +1,58 @@
 <x-app-layout>
-    <div class="container mx-auto mt-4">
-        <h2 class="text-2xl font-bold mb-4">Pagina Doações</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <!-- Card 1 -->
-            <div class="card bg-white shadow-md rounded-lg p-4">
-                <h5 class="font-semibold text-lg">Card 1</h5>
-                <p class="text-gray-700">Descrição do primeiro card. Informações importantes podem ser exibidas aqui.</p>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="card bg-white shadow-md rounded-lg p-4">
-                <h5 class="font-semibold text-lg">Card 2</h5>
-                <p class="text-gray-700">Descrição do segundo card. Mais detalhes ou informações relevantes podem ser colocadas aqui.</p>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="card bg-white shadow-md rounded-lg p-4">
-                <h5 class="font-semibold text-lg">Card 3</h5>
-                <p class="text-gray-700">Descrição do terceiro card. Use este espaço para destacar pontos-chave.</p>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-bold mb-4">Formulário de Contato</h3>
-        <form action="#" method="POST" class="bg-white shadow-md rounded-lg p-6">
+    <div class="container-fluid mt-4 p-4">
+        <h2 class="text-2xl font-bold mb-4 text-center">Doações</h2>
+        <form action="{{ isset($content) ? route('doacao.update', $content->id) : route('doacao.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="mb-4">
-                <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
-                <input type="text" id="nome" name="nome" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Digite seu nome">
+            @if(isset($content))
+                @method('PATCH')
+            @endif
+
+            <div class="row mb-4 mt-4">
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">Banco:</h5>
+                        <input type="text" name="banco" class="form-control" value="{{ isset($content) ? $content->banco : '' }}">
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">Agência:</h5>
+                        <input type="text" name="agencia" class="form-control" value="{{ isset($content) ? $content->agencia : '' }}">
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">Conta Corrente:</h5>
+                        <input type="text" name="conta_corrente" class="form-control" value="{{ isset($content) ? $content->conta_corrente : '' }}">
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">CNPJ:</h5>
+                        <input type="text" name="cnpj" class="form-control" maxlength="14" value="{{ isset($content) ? $content->cnpj : '' }}">
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">Titular:</h5>
+                        <input type="text" name="titular" class="form-control" value="{{ isset($content) ? $content->titular : '' }}">
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <div class="card shadow-md rounded-lg p-4">
+                        <h5 class="font-semibold text-lg mb-2">PIX:</h5>
+                        <input type="text" name="pix" class="form-control" value="{{ isset($content) ? $content->pix : '' }}">
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Digite seu e-mail">
-            </div>
-
-            <div class="mb-4">
-                <label for="mensagem" class="block text-sm font-medium text-gray-700">Mensagem</label>
-                <textarea id="mensagem" name="mensagem" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" rows="4" placeholder="Digite sua mensagem"></textarea>
-            </div>
-
-            <div class="flex justify-end">
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500">Enviar</button>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">Salvar</button>
             </div>
         </form>
     </div>

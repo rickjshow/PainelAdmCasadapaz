@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Doacao extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'banco',
+        'agencia',
+        'conta_corrente',
+        'cnpj',
+        'titular',
+        'pix'
+    ];
 }
