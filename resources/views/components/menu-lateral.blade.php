@@ -58,7 +58,7 @@
                     </a>
                 </li>
                 <li class="border-b border-gray-700">
-                    <a href="{{ route('doacoes.index') }}" class="block p-4 flex items-center cursor-pointer">
+                    <a href="{{ route('doacao.index') }}" class="block p-4 flex items-center cursor-pointer">
                         <i class="fas fa-donate mr-3"></i>
                         Doações
                     </a>

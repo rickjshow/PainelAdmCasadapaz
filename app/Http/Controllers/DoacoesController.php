@@ -13,8 +13,8 @@ class DoacoesController extends Controller
     public function index()
     {
 
-        $data = Doacao::all()->first();
-        return view('doacoes.index', compact('data'));
+        $content = Doacao::all()->first();
+        return view('doacoes.index', compact('content'));
     }
 
     /**
