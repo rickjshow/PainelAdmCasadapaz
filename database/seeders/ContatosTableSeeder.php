@@ -16,7 +16,7 @@ class ContatosTableSeeder extends Seeder
         Contato::create([
             'whatsapp' => '(44) 99976-0543',
             'instagram' => 'casadapaz_umuarama',
-            'fanpage' => 'http://facebook.com/CasaDaPazUmuarama',
+            'fanpage' => 'CasaDaPazUmuarama',
             'email' => 'casadapazassociacao@gmail.com',
             'endereco_sede' => 'Rua Mimosa, 3172, Jd. Panorama',
             'endereco_bazar' => 'Av. Rio de Janeiro, 4453, Zona II',
