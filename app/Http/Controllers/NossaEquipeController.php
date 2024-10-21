@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\Log;
 
 class NossaEquipeController extends Controller
 {
-    public function index() {}
+    public function index()
+    {
+        $equipes = Nossaequipe::all();
+        return view('equipe.index', compact('equipes'));
+    }
 
     public function create()
     {
@@ -26,15 +30,13 @@ class NossaEquipeController extends Controller
                 'profissao' => 'required|string|max:255',
             ]);
 
-            $fotoBlob = null;
+            $fotoPath = null;
             if ($request->hasFile('foto')) {
                 $fotoPath = $request->file('foto')->store('fotos');
-                // Lê o conteúdo da imagem para armazenar como BLOB
-                $fotoBlob = file_get_contents($request->file('foto')->getRealPath());
             }
 
             Nossaequipe::create([
-                'foto' => $fotoBlob,
+                'foto' => $fotoPath,
                 'nome' => $request->nome,
                 'cargo' => $request->cargo,
                 'profissao' => $request->profissao,
@@ -51,16 +53,11 @@ class NossaEquipeController extends Controller
     {
         $equipe = Nossaequipe::findOrFail($id);
 
-        if (!$equipe || !$equipe->foto) {
+        if (!$equipe || !$equipe->foto || !Storage::exists($equipe->foto)) {
             abort(404);
         }
 
-        return response()->stream(function () use ($equipe) {
-            echo $equipe->foto;
-        }, 200, [
-            'Content-Type' => 'image/jpeg',
-            'Content-Disposition' => 'inline; filename="foto.jpg"',
-        ]);
+        return response()->file(Storage::path($equipe->foto));
     }
 
     public function edit(Nossaequipe $nossaEquipe)
@@ -80,14 +77,18 @@ class NossaEquipeController extends Controller
                 'profissao' => 'required|string|max:255',
             ]);
 
-            $foto = $nossaEquipe->foto;
+            $fotoPath = $nossaEquipe->foto;
 
             if ($request->hasFile('foto')) {
-                $foto = file_get_contents($request->file('foto')->getRealPath());
+                // Remove a imagem anterior, se existir
+                if ($fotoPath) {
+                    Storage::delete($fotoPath);
+                }
+                $fotoPath = $request->file('foto')->store('fotos');
             }
 
             $nossaEquipe->update([
-                'foto' => $foto,
+                'foto' => $fotoPath,
                 'nome' => $request->nome,
                 'cargo' => $request->cargo,
                 'profissao' => $request->profissao,
@@ -104,6 +105,12 @@ class NossaEquipeController extends Controller
     {
         try {
             $nossaEquipe = Nossaequipe::findOrFail($id);
+
+            // Remove a imagem associada, se existir
+            if ($nossaEquipe->foto) {
+                Storage::delete($nossaEquipe->foto);
+            }
+
             $nossaEquipe->delete();
             return redirect()->route('equipe.index')->with('success', 'Membro removido com sucesso!');
         } catch (\Exception $e) {

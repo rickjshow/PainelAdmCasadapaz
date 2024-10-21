@@ -13,7 +13,7 @@
                         @if(isset($img) && $img->banner_principal)
                             <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px;" />
                             <input type="checkbox" name="remove_banner_principal" value="1"> Excluir Banner Desktop
-                        @endif
+                        @endif  
                         <input type="file" accept="image/*" name="banner_principal" class="form-control mb-2" />
                     </div>
                 </div>
