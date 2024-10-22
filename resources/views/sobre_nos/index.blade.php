@@ -6,35 +6,43 @@
             @csrf
 
             <div class="row mb-4">
-
+                <!-- Banner Desktop -->
                 <div class="col-md-6 mb-4">
-                    <div class="card shadow-md rounded-lg p-4">
+                    <div class="card shadow-md rounded-lg p-4" style="height: 250px;">
                         <h5 class="font-semibold text-lg mb-2">Banner Desktop</h5>
                         @if(isset($img) && $img->banner_principal)
                             <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px;" />
-                            <input type="checkbox" name="remove_banner_principal" value="1"> Excluir Banner Desktop
-                        @endif  
+                            <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeBanner('{{ $img->id }}', 'banner_principal')">
+                                <i class="fa fa-trash"></i> Excluir
+                            </button>
+                        @endif
                         <input type="file" accept="image/*" name="banner_principal" class="form-control mb-2" />
                     </div>
                 </div>
 
+                <!-- Banner Mobile -->
                 <div class="col-md-6 mb-4">
-                    <div class="card shadow-md rounded-lg p-4">
+                    <div class="card shadow-md rounded-lg p-4" style="height: 250px;">
                         <h5 class="font-semibold text-lg mb-2">Banner Mobile</h5>
                         @if(isset($img) && $img->banner_principal_mobile)
                             <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 100px;" />
-                            <input type="checkbox" name="remove_banner_principal_mobile" value="1"> Excluir Banner Mobile
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'banner_principal_mobile')">
+                                <i class="fa fa-trash"></i> Excluir
+                            </button>
                         @endif
                         <input type="file" accept="image/*" name="banner_principal_mobile" class="form-control mb-2" />
                     </div>
                 </div>
             </div>
 
+            <!-- Imagem da Missão -->
             <div class="card shadow-md rounded-lg p-4 mb-4">
                 <h5 class="font-semibold text-lg mb-2">Imagem da Missão</h5>
                 @if(isset($img) && $img->imagem_missao)
                     <img src="{{ asset('storage/' . $img->imagem_missao) }}" class="img-fluid mb-2" style="max-width: 100px;" />
-                    <input type="checkbox" name="remove_imagem_missao" value="1"> Excluir Imagem da Missão
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'imagem_missao')">
+                        <i class="fa fa-trash"></i> Excluir
+                    </button>
                 @endif
                 <input type="file" accept="image/*" name="imagem_missao" class="form-control mb-2" />
             </div>
@@ -42,10 +50,37 @@
             <button type="submit" class="btn btn-success mb-4 mt-2">Salvar</button>
         </form>
 
+        <script>
+            function removeBanner(id, type) {
+                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
+                    fetch(`{{ url('/imagens') }}/${id}/remover`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type: type })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.'); // Retorne a promessa
+                        } else {
+                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.'); // Exibe erro
+                            throw new Error('Erro na resposta'); // Lança erro para o catch
+                        }
+                    })
+                    .then(() => {
+                        location.reload(); // Recarrega a página após o alerta de sucesso
+                    })
+                    .catch(error => console.error('Erro:', error)); // Captura erro no console
+                });
+            }
+        </script>
+
         <form action="{{ isset($content) ? route('sobrenos.update', $content->id) : route('sobrenos.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if(isset($content))
-            @method('PATCH')
+                @method('PATCH')
             @endif
 
             <div class="row mb-4 mt-4">
@@ -103,57 +138,29 @@
 
         <div class="row">
             @if(isset($equipes) && $equipes->isNotEmpty())
-            @foreach ($equipes as $equipe)
-            <div class="col-md-3 text-center mb-4">
-                <div class="card mb-4 shadow-sm border-light">
-                    <div style="height: 350px; overflow: hidden;">
-                        <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe">
+                @foreach ($equipes as $equipe)
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="card mb-4 shadow-sm border-light">
+                            <div style="height: 350px; overflow: hidden;">
+                                <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">{{ $equipe->nome }}</h5>
+                                <p class="card-text">{{ $equipe->cargo }}</p>
+                                <p class="card-text text-muted">{{ $equipe->profissao }}</p>
+                                <button class="btn btn-warning open-modal-btn" data-id="{{ $equipe->id }}">
+                                    Editar
+                                </button>
+                                <form action="{{ route('equipes.destroy', $equipe->id) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-danger delete-btn">Excluir</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">{{ $equipe->nome }}</h5>
-                        <p class="card-text">{{ $equipe->cargo }}</p>
-                        <p class="card-text text-muted">{{ $equipe->profissao }}</p>
-                        <button class="btn btn-warning open-modal-btn" data-id="{{ $equipe->id }}">
-                            Editar
-                        </button>
-                        <form action="{{ route('equipes.destroy', $equipe->id) }}" method="POST" class="d-inline delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-danger delete-btn">Excluir</button>
-                        </form>
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var deleteButtons = document.querySelectorAll('.delete-btn');
-
-                                deleteButtons.forEach(function(button) {
-                                    button.addEventListener('click', function(event) {
-                                        event.preventDefault();
-                                        var form = this.closest('form');
-
-                                        Swal.fire({
-                                            title: 'Tem certeza?',
-                                            text: "Você não poderá reverter isso!",
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#3085d6',
-                                            cancelButtonColor: '#d33',
-                                            confirmButtonText: 'Sim, excluir!',
-                                            cancelButtonText: 'Cancelar'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                form.submit();
-                                            }
-                                        });
-                                    });
-                                });
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de Edição -->
+                                <!-- Modal de Edição -->
             <div class="modal fade" id="modalEdit{{ $equipe->id }}" tabindex="-1" aria-labelledby="modalEditLabel{{ $equipe->id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <form action="{{ route('equipes.update', $equipe->id) }}" method="POST" enctype="multipart/form-data">
@@ -252,6 +259,44 @@
             document.getElementById('openModalCreate').addEventListener('click', function() {
                 var modalCreate = new bootstrap.Modal(document.getElementById('modalCreate'));
                 modalCreate.show();
+            });
+        </script>
+
+
+        <script>
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const form = this.closest('.delete-form');
+                    showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                _method: 'DELETE', // Envia o método DELETE no corpo
+                                // Qualquer outro dado que você precise enviar
+                            })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Mostra o modal de sucesso
+                                showSuccessAlert('Excluído!', 'O membro foi excluído com sucesso.')
+                                    .then(() => {
+                                        location.reload(); // Recarrega a página após o alerta de sucesso
+                                    });
+                            } else {
+                                // Mostra o modal de erro
+                                showErrorAlert('Erro!', 'Não foi possível excluir o membro.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            showErrorAlert('Erro!', 'Ocorreu um erro ao excluir o membro.');
+                        });
+                    });
+                });
             });
         </script>
     </div>

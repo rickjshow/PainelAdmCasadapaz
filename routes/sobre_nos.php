@@ -17,5 +17,10 @@ Route::patch('/sobre-nos/{id}', [SobreNosController::class, 'update'])->name('so
 // Rotas do controlador de banners
 Route::get('/sobre-nos/banners', [BannersSobreNosController::class, 'index'])->name('banners.index');
 Route::post('/sobre-nos/banners/store', [BannersSobreNosController::class, 'store'])->name('banners.store');
-Route::delete('/sobre-nos/banners/{id}', [BannersSobreNosController::class, 'destroy'])->name('banners.destroy');
+Route::post('/imagens/{id}/remover', [BannersSobreNosController::class, 'remover'])->name('banners.remover');
+
+
+
+
+
 
