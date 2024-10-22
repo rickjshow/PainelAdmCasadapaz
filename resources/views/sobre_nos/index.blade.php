@@ -2,14 +2,14 @@
     <div class="container-fluid mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Sobre Nós</h2>
 
-        <form action="{{ route('banners.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('banners-sobrenos.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="row mb-4">
-                <!-- Banner Desktop -->
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4" style="height: 250px;">
-                        <h5 class="font-semibold text-lg mb-2">Banner Desktop</h5>
+                        <h5 class="font-semibold text-lg">Banner Desktop</h5>
+                        <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1920x170 </h4>
                         @if(isset($img) && $img->banner_principal)
                             <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px;" />
                             <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeBanner('{{ $img->id }}', 'banner_principal')">
@@ -20,10 +20,10 @@
                     </div>
                 </div>
 
-                <!-- Banner Mobile -->
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4" style="height: 250px;">
-                        <h5 class="font-semibold text-lg mb-2">Banner Mobile</h5>
+                        <h5 class="font-semibold text-lg">Banner Mobile</h5>
+                        <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1000x500</h4>
                         @if(isset($img) && $img->banner_principal_mobile)
                             <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 100px;" />
                             <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'banner_principal_mobile')">
@@ -35,9 +35,9 @@
                 </div>
             </div>
 
-            <!-- Imagem da Missão -->
             <div class="card shadow-md rounded-lg p-4 mb-4">
-                <h5 class="font-semibold text-lg mb-2">Imagem da Missão</h5>
+                <h5 class="font-semibold text-lg">Imagem da Missão</h5>
+                <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 341x464</h4>
                 @if(isset($img) && $img->imagem_missao)
                     <img src="{{ asset('storage/' . $img->imagem_missao) }}" class="img-fluid mb-2" style="max-width: 100px;" />
                     <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'imagem_missao')">
@@ -63,16 +63,16 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.'); // Retorne a promessa
+                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
                         } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.'); // Exibe erro
-                            throw new Error('Erro na resposta'); // Lança erro para o catch
+                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
+                            throw new Error('Erro na resposta');
                         }
                     })
                     .then(() => {
-                        location.reload(); // Recarrega a página após o alerta de sucesso
+                        location.reload();
                     })
-                    .catch(error => console.error('Erro:', error)); // Captura erro no console
+                    .catch(error => console.error('Erro:', error));
                 });
             }
         </script>
@@ -141,8 +141,8 @@
                 @foreach ($equipes as $equipe)
                     <div class="col-md-3 text-center mb-4">
                         <div class="card mb-4 shadow-sm border-light">
-                            <div style="height: 350px; overflow: hidden;">
-                                <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe">
+                            <div style="overflow: hidden;">
+                                <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title text-primary">{{ $equipe->nome }}</h5>
@@ -159,8 +159,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                                <!-- Modal de Edição -->
             <div class="modal fade" id="modalEdit{{ $equipe->id }}" tabindex="-1" aria-labelledby="modalEditLabel{{ $equipe->id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <form action="{{ route('equipes.update', $equipe->id) }}" method="POST" enctype="multipart/form-data">
@@ -186,6 +186,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="foto" class="form-label">Foto</label>
+                                    <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 405x417</h5>
                                     <input type="file" class="form-control" name="foto" accept="image/*">
                                 </div>
                             </div>
@@ -219,7 +220,6 @@
             @endif
         </div>
 
-        <!-- Modal de Criação -->
         <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <form action="{{ route('equipes.store') }}" method="POST" enctype="multipart/form-data">
@@ -244,6 +244,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="foto" class="form-label">Foto</label>
+                                <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 405x417</h5>
                                 <input type="file" class="form-control" name="foto" accept="image/*" required>
                             </div>
                         </div>
@@ -275,19 +276,16 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                _method: 'DELETE', // Envia o método DELETE no corpo
-                                // Qualquer outro dado que você precise enviar
+                                _method: 'DELETE', 
                             })
                         })
                         .then(response => {
                             if (response.ok) {
-                                // Mostra o modal de sucesso
                                 showSuccessAlert('Excluído!', 'O membro foi excluído com sucesso.')
                                     .then(() => {
-                                        location.reload(); // Recarrega a página após o alerta de sucesso
+                                        location.reload();
                                     });
                             } else {
-                                // Mostra o modal de erro
                                 showErrorAlert('Erro!', 'Não foi possível excluir o membro.');
                             }
                         })

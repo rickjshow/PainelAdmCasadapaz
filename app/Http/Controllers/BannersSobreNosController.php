@@ -11,7 +11,7 @@ class BannersSobreNosController extends Controller
 {
     public function index()
     {
-        return view('sobre_nos.index'); // Retornar a view com os banners
+        return view('sobre_nos.index');
     }
 
     public function store(Request $request)
@@ -25,18 +25,16 @@ class BannersSobreNosController extends Controller
 
             $banner = BannerSobreNos::first();
 
-            // Atualiza ou cria o banner
             if ($banner) {
-                // Atualiza o banner principal
+
                 if ($request->hasFile('banner_principal')) {
-                    // Remove o banner anterior se houver
+
                     if ($banner->banner_principal) {
                         Storage::delete($banner->banner_principal);
                     }
                     $data['banner_principal'] = $request->file('banner_principal')->store('banners');
                 }
 
-                // Atualiza o banner principal mobile
                 if ($request->hasFile('banner_principal_mobile')) {
                     if ($banner->banner_principal_mobile) {
                         Storage::delete($banner->banner_principal_mobile);
@@ -44,7 +42,6 @@ class BannersSobreNosController extends Controller
                     $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
                 }
 
-                // Atualiza a imagem da missão
                 if ($request->hasFile('imagem_missao')) {
                     if ($banner->imagem_missao) {
                         Storage::delete($banner->imagem_missao);
@@ -54,7 +51,7 @@ class BannersSobreNosController extends Controller
 
                 $banner->update($data);
             } else {
-                // Cria um novo banner
+
                 if ($request->hasFile('banner_principal')) {
                     $data['banner_principal'] = $request->file('banner_principal')->store('banners');
                 }
