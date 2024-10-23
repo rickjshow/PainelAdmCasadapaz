@@ -2,63 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerPremio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BannersPremiosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->validate([
+                'banner_principal' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'banner_principal_mobile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            $banner = BannerPremio::first();
+
+            if ($banner) {
+
+                if ($request->hasFile('banner_principal')) {
+
+                    if ($banner->banner_principal) {
+                        Storage::delete($banner->banner_principal);
+                    }
+                    $data['banner_principal'] = $request->file('banner_principal')->store('banners-premios');
+                }
+
+                if ($request->hasFile('banner_principal_mobile')) {
+                    if ($banner->banner_principal_mobile) {
+                        Storage::delete($banner->banner_principal_mobile);
+                    }
+                    $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners-premios');
+                }
+
+                $banner->update($data);
+            } else {
+
+                if ($request->hasFile('banner_principal')) {
+                    $data['banner_principal'] = $request->file('banner_principal')->store('banners-premios');
+                }
+                if ($request->hasFile('banner_principal_mobile')) {
+                    $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners-premios');
+                }
+
+                if ($data['banner_principal'] || $data['banner_principal_mobile']) {
+                    BannerPremio::create($data);
+                } else {
+                    return redirect()->route('sobre-nos.index')->with('error', 'Por favor, envie pelo menos um banner.');
+                }
+            }
+
+            return redirect()->route('premios.index')->with('success', 'Banner salvo com sucesso!');
+        } catch (\Exception $e) {
+            Log::error('Erro ao salvar banner: ' . $e->getMessage());
+            return redirect()->route('premios.index')->with('error', 'Erro ao salvar o banner.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function remover(Request $request, $id)
     {
-        //
-    }
+        $tipo = $request->input('type');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $imagem = BannerPremio::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        if ($imagem) {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            if ($tipo === 'banner_principal') {
+                Storage::delete($imagem->banner_principal);
+                $imagem->banner_principal = null;
+            } elseif ($tipo === 'banner_principal_mobile') {
+                Storage::delete($imagem->banner_principal_mobile);
+                $imagem->banner_principal_mobile = null;
+            }
+
+            $imagem->save();
+            return redirect()->back()->with('success', 'Imagem excluída com sucesso!');
+        }
+
+        return redirect()->back()->with('error', 'Imagem não pôde ser excluída.');
     }
 }

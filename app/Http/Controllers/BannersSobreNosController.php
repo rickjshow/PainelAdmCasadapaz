@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class BannersSobreNosController extends Controller
 {
-    public function index()
-    {
-        return view('sobre_nos.index');
-    }
 
     public function store(Request $request)
     {
@@ -32,34 +28,34 @@ class BannersSobreNosController extends Controller
                     if ($banner->banner_principal) {
                         Storage::delete($banner->banner_principal);
                     }
-                    $data['banner_principal'] = $request->file('banner_principal')->store('banners');
+                    $data['banner_principal'] = $request->file('banner_principal')->store('banners-sobrenos');
                 }
 
                 if ($request->hasFile('banner_principal_mobile')) {
                     if ($banner->banner_principal_mobile) {
                         Storage::delete($banner->banner_principal_mobile);
                     }
-                    $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
+                    $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners-sobrenos');
                 }
 
                 if ($request->hasFile('imagem_missao')) {
                     if ($banner->imagem_missao) {
                         Storage::delete($banner->imagem_missao);
                     }
-                    $data['imagem_missao'] = $request->file('imagem_missao')->store('banners');
+                    $data['imagem_missao'] = $request->file('imagem_missao')->store('banners-sobrenos');
                 }
 
                 $banner->update($data);
             } else {
 
                 if ($request->hasFile('banner_principal')) {
-                    $data['banner_principal'] = $request->file('banner_principal')->store('banners');
+                    $data['banner_principal'] = $request->file('banner_principal')->store('banners-sobrenos');
                 }
                 if ($request->hasFile('banner_principal_mobile')) {
-                    $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners');
+                    $data['banner_principal_mobile'] = $request->file('banner_principal_mobile')->store('banners-sobrenos');
                 }
                 if ($request->hasFile('imagem_missao')) {
-                    $data['imagem_missao'] = $request->file('imagem_missao')->store('banners');
+                    $data['imagem_missao'] = $request->file('imagem_missao')->store('banners-sobrenos');
                 }
 
                 if ($data['banner_principal'] || $data['banner_principal_mobile'] || $data['imagem_missao']) {
@@ -102,3 +98,4 @@ class BannersSobreNosController extends Controller
         return redirect()->back()->with('error', 'Imagem não pôde ser excluída.');
     }
 }
+

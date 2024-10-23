@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerDoacao;
 use App\Models\Doacao;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,9 @@ class DoacoesController extends Controller
      */
     public function index()
     {
-
+        $img = BannerDoacao::all()->first();
         $content = Doacao::all()->first();
-        return view('doacoes.index', compact('content'));
+        return view('doacoes.index', compact('content', 'img'));
     }
 
     /**

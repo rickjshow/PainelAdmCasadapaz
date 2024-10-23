@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('banner_como_ajudars', function (Blueprint $table) {
             $table->id();
+            $table->binary('banner_principal')->nullable();
+            $table->binary('banner_principal_mobile')->nullable();
             $table->timestamps();
         });
     }

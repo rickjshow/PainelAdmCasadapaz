@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class BannerGaleria extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'banner_principal',
+        'banner_principal_mobile'
+    ];
 }

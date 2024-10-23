@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerGaleria;
 use Illuminate\Http\Request;
 
 class GaleriaController extends Controller
@@ -11,7 +12,8 @@ class GaleriaController extends Controller
      */
     public function index()
     {
-        return view('galeria.index');
+        $img = BannerGaleria::all()->first();
+        return view('galeria.index', compact('img'));
     }
 
     /**

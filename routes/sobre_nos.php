@@ -14,10 +14,8 @@ Route::get('/imagem/{filename}', [NossaEquipeController::class, 'exibirImagem'])
 Route::post('/sobre-nos/store', [SobreNosController::class, 'store'])->name('sobrenos.store');
 Route::patch('/sobre-nos/{id}', [SobreNosController::class, 'update'])->name('sobrenos.update');
 
-// Rotas do controlador de banners
-Route::get('/sobre-nos/banners', [BannersSobreNosController::class, 'index'])->name('banners-sobrenos.index');
 Route::post('/sobre-nos/banners/store', [BannersSobreNosController::class, 'store'])->name('banners-sobrenos.store');
-Route::post('/imagens/{id}/remover', [BannersSobreNosController::class, 'remover'])->name('banners-sobrenos.remover');
+Route::post('/imagens/{id}/remover/sobrenos', [BannersSobreNosController::class, 'remover'])->name('banners-sobrenos.remover');
 
 
 

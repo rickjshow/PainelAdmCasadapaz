@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BannerSobreNos;
 use App\Models\Nossaequipe;
 use App\Models\Sobrenos;
-use Illuminate\Auth\Events\Validated;
-use Illuminate\Container\Attributes\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class SobreNosController extends Controller
@@ -24,8 +21,8 @@ class SobreNosController extends Controller
 
     public function create()
     {
-        
-    }   
+
+    }
 
     public function store(Request $request)
     {

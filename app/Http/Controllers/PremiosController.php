@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerPremio;
 use Illuminate\Http\Request;
 
 class PremiosController extends Controller
@@ -11,7 +12,8 @@ class PremiosController extends Controller
      */
     public function index()
     {
-        return view('premios.index');
+        $img = BannerPremio::all()->first();
+        return view('premios.index', compact('img'));
     }
 
     /**

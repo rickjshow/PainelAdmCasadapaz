@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerContato;
 use App\Models\Contato;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,9 @@ class ContatoController extends Controller
      */
     public function index()
     {
+        $img = BannerContato::all()->first();
         $content = Contato::all()->first();
-        return view('contato.index', compact('content'));
+        return view('contato.index', compact('content', 'img'));
     }
 
     /**
@@ -83,17 +85,17 @@ class ContatoController extends Controller
             'endereco_bazar' => 'required|string',
             'instagram_bazar' => 'required|string'
         ]);
-    
+
         // Find the existing record
         $contato = Contato::findOrFail($id);
-    
+
         // Update the record with validated data
         $contato->update($validatedData);
-    
+
         // Redirect with success message
         return redirect()->route('contato.index')->with('success', 'Contatos atualizados com sucesso!');
     }
-    
+
 
     /**
      * Remove the specified resource from storage.

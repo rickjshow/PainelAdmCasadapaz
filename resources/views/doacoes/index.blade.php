@@ -9,7 +9,7 @@
     <body>
         <div class="container-fluid mt-4 p-4">
             <h2 class="text-2xl font-bold mb-4 text-center">Doações</h2>
-                <form action="{{ route('banners.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('banners-doacoes.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-4">
                     <div class="col-md-6 mb-4">
@@ -41,25 +41,13 @@
                     </div>
                 </div>
 
-                <div class="card shadow-md rounded-lg p-4 mb-4">
-                    <h5 class="font-semibold text-lg">Imagem da Missão</h5>
-                    <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 341x464</h4>
-                    @if(isset($img) && $img->imagem_missao)
-                        <img src="{{ asset('storage/' . $img->imagem_missao) }}" class="img-fluid mb-2" style="max-width: 100px;" />
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'imagem_missao')">
-                            <i class="fa fa-trash"></i> Excluir
-                        </button>
-                    @endif
-                    <input type="file" accept="image/*" name="imagem_missao" class="form-control mb-2" />
-                </div>
-
                 <button type="submit" class="btn btn-success mb-4 mt-2">Salvar</button>
             </form>
 
         <script>
             function removeBanner(id, type) {
                 showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(`{{ url('/imagens') }}/${id}/remover`, {
+                    fetch(`{{ url('/imagens') }}/${id}/remover/doacoes`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -81,7 +69,7 @@
                     .catch(error => console.error('Erro:', error));
                 });
             }
-        </script> 
+        </script>
 
             <form action="{{ isset($content) ? route('doacao.update', $content->id) : route('doacao.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf

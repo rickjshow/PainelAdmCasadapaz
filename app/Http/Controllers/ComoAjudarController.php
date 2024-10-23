@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerComoAjudar;
 use Illuminate\Http\Request;
 
 class ComoAjudarController extends Controller
@@ -11,7 +12,8 @@ class ComoAjudarController extends Controller
      */
     public function index()
     {
-        return view('como_ajudar.index');
+        $img = BannerComoAjudar::all()->first();
+        return view('como_ajudar.index', compact('img'));
     }
 
     /**

@@ -9,4 +9,9 @@ class BannerDoacao extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'banner_principal',
+        'banner_principal_mobile'
+    ];
+
 }

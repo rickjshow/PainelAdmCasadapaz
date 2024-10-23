@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('banner_doacaos', function (Blueprint $table) {
             $table->id();
-            $table->binary('banner_principal');
-            $table->binary('banner_principal_mobile');
+            $table->binary('banner_principal')->nullable();
+            $table->binary('banner_principal_mobile')->nullable();
             $table->timestamps();
         });
     }

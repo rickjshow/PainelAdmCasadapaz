@@ -53,7 +53,7 @@
         <script>
             function removeBanner(id, type) {
                 showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(`{{ url('/imagens') }}/${id}/remover`, {
+                    fetch(`{{ url('/imagens') }}/${id}/remover/sobrenos`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -276,7 +276,7 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                _method: 'DELETE', 
+                                _method: 'DELETE',
                             })
                         })
                         .then(response => {

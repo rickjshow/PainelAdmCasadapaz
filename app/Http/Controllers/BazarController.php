@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerBazar;
 use Illuminate\Http\Request;
 
 class BazarController extends Controller
@@ -11,7 +12,8 @@ class BazarController extends Controller
      */
     public function index()
     {
-        return view('bazar.index');
+        $img = BannerBazar::all()->first();
+        return view('bazar.index', compact('img'));
     }
 
     /**
