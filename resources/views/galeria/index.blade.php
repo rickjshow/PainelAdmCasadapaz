@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container mx-auto mt-4">
+    <div class="container mx-auto max-w-none mt-4">
         <h2 class="text-2xl font-bold mb-4">Pagina Galeria</h2>
 
         <form action="{{ route('banners-galeria.store') }}" method="POST" enctype="multipart/form-data">

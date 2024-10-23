@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container-fluid mt-4 p-4">
+    <div class="container-fluid max-w-none mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Contatos</h2>
 
         <form action="{{ route('banners-doacoes.store') }}" method="POST" enctype="multipart/form-data">

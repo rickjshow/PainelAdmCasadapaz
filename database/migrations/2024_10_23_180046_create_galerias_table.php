@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comoajudars', function (Blueprint $table) {
+        Schema::create('galerias', function (Blueprint $table) {
             $table->id();
-            $table->string('titulo');
-            $table->text('descricao');
+            $table->foreignId('evento_id')->constrained('eventos')->onDelete('cascade');
+            $table->string('tipo');
+            $table->binary('arquivo');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comoajudars');
+        Schema::dropIfExists('galerias');
     }
 };

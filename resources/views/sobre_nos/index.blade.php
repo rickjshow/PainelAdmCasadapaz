@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container-fluid mt-4 p-4">
+    <div class="container-fluid max-w-none mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Sobre Nós</h2>
 
         <form action="{{ route('banners-sobrenos.store') }}" method="POST" enctype="multipart/form-data">
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="card shadow-md rounded-lg p-4 mb-4">
+            <div class="card shadow-md rounded-lg p-4 mb-4 align">
                 <h5 class="font-semibold text-lg">Imagem da Missão</h5>
                 <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 341x464</h4>
                 @if(isset($img) && $img->imagem_missao)

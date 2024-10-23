@@ -1,6 +1,6 @@
 <x-app-layout>
-    <div class="container mx-auto mt-4">
-        <h2 class="text-2xl font-bold mb-4">Pagina Como Ajudar</h2>
+    <div class="container mx-auto max-w-none mt-4">
+        <h2 class="text-2xl font-bold mb-4 text-center">Pagina Como Ajudar</h2>
 
         <form action="{{ route('banners-comoajudar.store') }}" method="POST" enctype="multipart/form-data">
             @csrf

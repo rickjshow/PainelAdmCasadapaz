@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Galeria extends Model
+class Evento extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'evento_id',
-        'tipo',
-        'arquivo'
+        'titulo',
+        'descricao',
+        'data'
     ];
 
-    public function evento()
+    public function galeria()
     {
-        return $this->belongsTo(Evento::class);
+        return $this->hasMany(Galeria::class);
     }
 }
