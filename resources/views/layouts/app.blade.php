@@ -12,6 +12,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/inputmask.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="{{ asset('js/alerts.js') }}"></script>
 
     <!-- Scripts -->
@@ -28,7 +29,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="flex min-h-screen">
+            <div class="container p-0 min-h-screen"> <!-- Remover margens e preenchimentos -->
                 <!-- Menu Lateral -->
                 <x-menu-lateral class="w-64 bg-gray-800 text-white h-screen" />
 
@@ -45,5 +46,6 @@
 
     @livewireScripts
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

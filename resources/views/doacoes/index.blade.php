@@ -1,13 +1,5 @@
 <x-app-layout>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <div class="container max-auto max-w-none mt-4 p-5">
+    <div class="container-fluid mt-4 p-4">
             <h2 class="text-2xl font-bold mb-4 text-center">Doações</h2>
                 <form action="{{ route('banners-doacoes.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -17,7 +9,7 @@
                             <h5 class="font-semibold text-lg">Banner Desktop</h5>
                             <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1920x170 </h4>
                             @if(isset($img) && $img->banner_principal)
-                                <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px;" />
+                                <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px; max-height: 50px;"/>
                                 <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeBanner('{{ $img->id }}', 'banner_principal')">
                                     <i class="fa fa-trash"></i> Excluir
                                 </button>
@@ -31,7 +23,7 @@
                             <h5 class="font-semibold text-lg">Banner Mobile</h5>
                             <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1000x500</h4>
                             @if(isset($img) && $img->banner_principal_mobile)
-                                <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 100px;" />
+                                <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 120px; max-height: 50px;" />
                                 <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'banner_principal_mobile')">
                                     <i class="fa fa-trash"></i> Excluir
                                 </button>
@@ -141,8 +133,4 @@
                 });
             });
         </script>
-
-    </body>
-    </html>
-
 </x-app-layout>

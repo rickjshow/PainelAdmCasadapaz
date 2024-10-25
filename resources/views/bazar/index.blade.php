@@ -1,6 +1,6 @@
 <x-app-layout>
-    <div class="container mx-auto max-w-none mt-4">
-        <h2 class="text-2xl font-bold mb-4">Pagina Bazar</h2>
+    <div class="container-fluid mt-4 p-4">
+        <h2 class="text-2xl font-bold mb-4 text-center">Pagina Bazar</h2>
 
         <form action="{{ route('banners-bazar.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -11,7 +11,7 @@
                         <h5 class="font-semibold text-lg">Banner Desktop</h5>
                         <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1920x170 </h4>
                         @if(isset($img) && $img->banner_principal)
-                            <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px;" />
+                            <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px; max-height: 50px;" />
                             <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeBanner('{{ $img->id }}', 'banner_principal')">
                                 <i class="fa fa-trash"></i> Excluir
                             </button>
@@ -25,7 +25,7 @@
                         <h5 class="font-semibold text-lg">Banner Mobile</h5>
                         <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1000x500</h4>
                         @if(isset($img) && $img->banner_principal_mobile)
-                            <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 100px;" />
+                            <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 120px; max-height: 50px;" />
                             <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'banner_principal_mobile')">
                                 <i class="fa fa-trash"></i> Excluir
                             </button>
@@ -65,47 +65,5 @@
             }
         </script>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <!-- Card 1 -->
-            <div class="card bg-white shadow-md rounded-lg p-4">
-                <h5 class="font-semibold text-lg">Card 1</h5>
-                <p class="text-gray-700">Descrição do primeiro card. Informações importantes podem ser exibidas aqui.</p>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="card bg-white shadow-md rounded-lg p-4">
-                <h5 class="font-semibold text-lg">Card 2</h5>
-                <p class="text-gray-700">Descrição do segundo card. Mais detalhes ou informações relevantes podem ser colocadas aqui.</p>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="card bg-white shadow-md rounded-lg p-4">
-                <h5 class="font-semibold text-lg">Card 3</h5>
-                <p class="text-gray-700">Descrição do terceiro card. Use este espaço para destacar pontos-chave.</p>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-bold mb-4">Formulário de Contato</h3>
-        <form action="#" method="POST" class="bg-white shadow-md rounded-lg p-6">
-            @csrf
-            <div class="mb-4">
-                <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
-                <input type="text" id="nome" name="nome" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Digite seu nome">
-            </div>
-
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Digite seu e-mail">
-            </div>
-
-            <div class="mb-4">
-                <label for="mensagem" class="block text-sm font-medium text-gray-700">Mensagem</label>
-                <textarea id="mensagem" name="mensagem" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" rows="4" placeholder="Digite sua mensagem"></textarea>
-            </div>
-
-            <div class="flex justify-end">
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500">Enviar</button>
-            </div>
-        </form>
     </div>
 </x-app-layout>
