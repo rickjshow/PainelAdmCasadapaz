@@ -29,7 +29,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="container p-0 min-h-screen"> <!-- Remover margens e preenchimentos -->
+            <div class="container-fluid p-0 min-h-screen"> <!-- Remover margens e preenchimentos -->
                 <!-- Menu Lateral -->
                 <x-menu-lateral class="w-64 bg-gray-800 text-white h-screen" />
 

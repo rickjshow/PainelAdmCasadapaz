@@ -27,8 +27,8 @@
                     <label for="necessidade" class="form-label">Há Necessidade?</label>
                     <select class="form-select" id="necessidade" name="necessidade" required>
                         <option value="" disabled selected>Selecione a necessidade</option>
-                        <option value="Necessidade 1">Sim</option>
-                        <option value="Necessidade 2">Não</option>
+                        <option value="Sim">Sim</option>
+                        <option value="Não">Não</option>
                     </select>
                     </div>
                     <div class="modal-footer">
@@ -45,8 +45,8 @@
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
-                <th>Vaga</th>
-                <th>Necessidade</th>
+                <th class="text-center">Vaga</th>
+                <th class="text-center" style="max-width: 500px;">Necessidade</th>
                 <th class="text-center">Ações</th>
             </tr>
         </thead>
@@ -55,7 +55,11 @@
             @foreach($vagas as $vaga)
             <tr>
                 <td>{{ $vaga->vaga }}</td>
-                <td>{{ $vaga->necessidade }}</td>
+                <td class="text-center" style="max-width: 500px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <button class="btn btn-sm {{ $vaga->necessidade == 'Sim' ? 'btn-success' : 'btn-danger' }}">
+                        {{ $vaga->necessidade }}
+                    </button>
+                </td>
                 <td class="text-center">
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editVagaModal{{ $vaga->id }}">
                         Editar
@@ -86,7 +90,11 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="necessidade" class="form-label">Necessidade</label>
-                                    <textarea class="form-control" id="necessidade" name="necessidade" rows="3" required>{{ $vaga->necessidade }}</textarea>
+                                    <select class="form-select" id="necessidade" name="necessidade" required>
+                                        <option value="" disabled>Selecione a necessidade</option>
+                                        <option value="Sim" @selected($vaga->necessidade == 'Sim')>Sim</option>
+                                        <option value="Não" @selected($vaga->necessidade == 'Não')>Não</option>
+                                    </select>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

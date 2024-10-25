@@ -85,16 +85,18 @@
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
                             <tr>
-                                <th>Título</th>
-                                <th>Descrição</th>
+                                <th class="text-center">Título</th>
+                                <th class="text-center" style="max-width: 500px;">Descrição</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($content as $item)
                             <tr>
-                                <td>{{ $item->titulo }}</td>
-                                <td>{{ $item->descricao }}</td>
+                                <td class="text-center">{{ $item->titulo }}</td>
+                                <td class="text-center" style="max-width: 500px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ $item->descricao }}
+                                </td> 
                                 <td class="text-center">
                                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal{{ $item->id }}">
                                         Editar
@@ -110,6 +112,7 @@
                                 </td>
                             </tr>
 
+                            <!-- Modal para edição -->
                             <div class="modal fade" id="editItemModal{{ $item->id }}" tabindex="-1" aria-labelledby="editItemModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -142,6 +145,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
             <div class="tab-pane fade" id="nova-aba" role="tabpanel" aria-labelledby="nova-aba-tab">
