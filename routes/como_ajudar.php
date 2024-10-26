@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BannersComoAjudarController;
 use App\Http\Controllers\ComoAjudarController;
+use App\Http\Controllers\SolicitacaoController;
 use App\Http\Controllers\VagasController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +19,6 @@ Route::post('/como-ajudar/vagas/store', [VagasController::class, 'store'])->name
 Route::get('/como-ajudar/vagas/{id}/edit', [VagasController::class, 'edit'])->name('vagas.edit');
 Route::put('/como-ajudar/vagas/{id}/update', [VagasController::class, 'update'])->name('vagas.update');
 Route::delete('/como-ajudar/vagas/{id}/destroy', [VagasController::class, 'destroy'])->name('vagas.destroy');
+
+Route::get('solicitacoes', [SolicitacaoController::class, 'index'])->name('solicitacoes.index');
 

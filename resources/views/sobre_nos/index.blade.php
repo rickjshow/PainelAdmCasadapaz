@@ -137,30 +137,30 @@
         </button>
 
         <div class="row">
-            @if(isset($equipes) && $equipes->isNotEmpty())
-                @foreach ($equipes as $equipe)
-                    <div class="col-md-3 text-center mb-4">
-                        <div class="card mb-4 shadow-sm border-light">
-                            <div style="overflow: hidden;">
-                                <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe" style="width: 100%; height: 100%; object-fit: cover;">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title text-primary">{{ $equipe->nome }}</h5>
-                                <p class="card-text">{{ $equipe->cargo }}</p>
-                                <p class="card-text text-muted">{{ $equipe->profissao }}</p>
-                                <button class="btn btn-warning open-modal-btn" data-id="{{ $equipe->id }}">
-                                    Editar
-                                </button>
-                                <form action="{{ route('equipes.destroy', $equipe->id) }}" method="POST" class="d-inline delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-danger delete-btn">Excluir</button>
-                                </form>
-                            </div>
-                        </div>
+    @if(isset($equipes) && $equipes->isNotEmpty())
+        @foreach ($equipes as $equipe)
+            <div class="col-md-2 text-center mb-4">
+                <div class="card mb-4 shadow-sm border-light">
+                    <div style="overflow: hidden;">
+                        <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ $equipe->nome }}</h5>
+                        <p class="card-text">{{ $equipe->cargo }}</p>
+                        <p class="card-text text-muted">{{ $equipe->profissao }}</p>
+                        <button class="btn btn-warning open-modal-btn" data-id="{{ $equipe->id }}">
+                            Editar
+                        </button>
+                        <form action="{{ route('equipes.destroy', $equipe->id) }}" method="POST" class="d-inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn btn-danger delete-btn">Excluir</button>
+                        </form>
                     </div>
                 </div>
+            </div>
 
+            <!-- Modal de Edição -->
             <div class="modal fade" id="modalEdit{{ $equipe->id }}" tabindex="-1" aria-labelledby="modalEditLabel{{ $equipe->id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <form action="{{ route('equipes.update', $equipe->id) }}" method="POST" enctype="multipart/form-data">
@@ -191,35 +191,37 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Salvar Alterações</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var openModalBtns = document.querySelectorAll('.open-modal-btn');
-
-                    openModalBtns.forEach(function(btn) {
-                        btn.addEventListener('click', function() {
-                            var id = this.getAttribute('data-id');
-                            var modal = document.getElementById('modalEdit' + id);
-                            var modalInstance = new bootstrap.Modal(modal);
-                            modalInstance.show();
-                        });
-                    });
-                });
-            </script>
-            @endforeach
-            @else
-            <div class="col-12 text-center">
-                <p class="text-muted">Nenhum membro encontrado.</p>
-            </div>
-            @endif
+        @endforeach
+    @else
+        <div class="col-12 text-center">
+            <p class="text-muted">Nenhum membro encontrado.</p>
         </div>
+    @endif
+</div>
+
+<!-- Script para Abertura do Modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var openModalBtns = document.querySelectorAll('.open-modal-btn');
+
+        openModalBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = this.getAttribute('data-id');
+                var modal = document.getElementById('modalEdit' + id);
+                var modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+            });
+        });
+    });
+</script>
+
 
         <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
             <div class="modal-dialog">

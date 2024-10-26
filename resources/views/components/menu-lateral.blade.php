@@ -87,6 +87,12 @@
                         Contato
                     </a>
                 </li>
+                <li class="border-b border-gray-700">
+                    <a href="{{ route('solicitacoes.index') }}" class="block p-4 flex items-center cursor-pointer">
+                        <i class="fas fa-user-friends mr-3"></i>
+                        Solicitações
+                    </a>
+                </li>
             </ul>
         </div>
 
