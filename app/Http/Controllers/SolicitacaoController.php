@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RespostaSolicitacaoMail;
+use App\Models\Solicitacao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SolicitacaoController extends Controller
 {
@@ -11,7 +14,31 @@ class SolicitacaoController extends Controller
      */
     public function index()
     {
-        return view('solicitacoes.index');
+        $novasSolicitacoes = Solicitacao::where('status', 'pendente')->get();
+        $solicitacoesRespondidas = Solicitacao::where('status', 'respondida')->get();
+
+        return view('solicitacoes.index', compact('novasSolicitacoes', 'solicitacoesRespondidas'));
+    }
+
+    public function responder(Request $request, $id)
+    {
+
+        $request->validate([
+            'aprovacao' => 'required|in:aprovada,reprovada',
+            'resposta' => 'nullable|string',
+        ]);
+    
+        $solicitacao = Solicitacao::findOrFail($id);
+    
+        $solicitacao->status = 'respondida';
+        $solicitacao->aprovacao = $request->input('aprovacao');
+        $solicitacao->mensagem_resposta = $request->input('resposta');
+        $solicitacao->save();
+    
+        // Enviar e-mail
+        Mail::to($solicitacao->email)->send(new RespostaSolicitacaoMail($solicitacao, $request->input('resposta')));
+    
+        return redirect()->route('solicitacoes.index')->with('success', 'Solicitação respondida e e-mail enviado com sucesso!');
     }
 
     /**

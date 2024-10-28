@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('vaga');
             $table->string('status');
+            $table->text('mensagem_resposta')->nullable();
+            $table->string('aprovacao')->nullable();
             $table->timestamps();
         });
     }

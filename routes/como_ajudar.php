@@ -20,5 +20,3 @@ Route::get('/como-ajudar/vagas/{id}/edit', [VagasController::class, 'edit'])->na
 Route::put('/como-ajudar/vagas/{id}/update', [VagasController::class, 'update'])->name('vagas.update');
 Route::delete('/como-ajudar/vagas/{id}/destroy', [VagasController::class, 'destroy'])->name('vagas.destroy');
 
-Route::get('solicitacoes', [SolicitacaoController::class, 'index'])->name('solicitacoes.index');
-
