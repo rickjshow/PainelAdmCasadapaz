@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -24,15 +25,18 @@ class RespostaSolicitacaoMail extends Mailable
 
     public function build()
     {
+        $emailContent = EmailTemplate::first()->content;
+
+        $emailContent = str_replace(':nome', $this->solicitacao->nome, $emailContent);
+        $emailContent = str_replace(':vaga', $this->solicitacao->vaga, $emailContent);
+        $emailContent = str_replace(':mensagem', $this->mensagem, $emailContent);
+        $emailContent = str_replace(':aprovacao', $this->solicitacao->aprovacao === 'aprovada' ? 'aprovada' : 'não aprovada', $emailContent);
+
         return $this->view('emails.resposta_solicitacao')
-                    ->with([
-                        'nome' => $this->solicitacao->nome,
-                        'vaga' => $this->solicitacao->vaga,
-                        'mensagem' => $this->mensagem,
-                        'aprovacao' => $this->solicitacao->aprovacao
-                    ])
+                    ->with(['content' => $emailContent])
                     ->subject('Resposta à Sua Solicitação');
     }
+
     /**
      * Get the message envelope.
      */
