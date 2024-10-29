@@ -25,15 +25,11 @@ class RespostaSolicitacaoMail extends Mailable
 
     public function build()
     {
-        $emailContent = EmailTemplate::first()->content;
-
-        $emailContent = str_replace(':nome', $this->solicitacao->nome, $emailContent);
-        $emailContent = str_replace(':vaga', $this->solicitacao->vaga, $emailContent);
-        $emailContent = str_replace(':mensagem', $this->mensagem, $emailContent);
-        $emailContent = str_replace(':aprovacao', $this->solicitacao->aprovacao === 'aprovada' ? 'aprovada' : 'não aprovada', $emailContent);
-
         return $this->view('emails.resposta_solicitacao')
-                    ->with(['content' => $emailContent])
+                    ->with([
+                        'solicitacao' => $this->solicitacao,
+                        'mensagem' => $this->mensagem,
+                    ])
                     ->subject('Resposta à Sua Solicitação');
     }
 

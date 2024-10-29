@@ -22,22 +22,21 @@ class SolicitacaoController extends Controller
 
     public function responder(Request $request, $id)
     {
-
         $request->validate([
             'aprovacao' => 'required|in:aprovada,reprovada',
             'resposta' => 'nullable|string',
         ]);
-    
+
         $solicitacao = Solicitacao::findOrFail($id);
-    
+
         $solicitacao->status = 'respondida';
         $solicitacao->aprovacao = $request->input('aprovacao');
         $solicitacao->mensagem_resposta = $request->input('resposta');
         $solicitacao->save();
-    
+
         // Enviar e-mail
         Mail::to($solicitacao->email)->send(new RespostaSolicitacaoMail($solicitacao, $request->input('resposta')));
-    
+
         return redirect()->route('solicitacoes.index')->with('success', 'Solicitação respondida e e-mail enviado com sucesso!');
     }
 

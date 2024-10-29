@@ -1,12 +1,9 @@
 <?php
 
-use App\Http\Controllers\EmailContentController;
 use App\Http\Controllers\SolicitacaoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/solicitacoes', [SolicitacaoController::class, 'index'])->name('solicitacoes.index');
 Route::post('/solicitacoes/{id}/responder', [SolicitacaoController::class, 'responder'])->name('solicitacoes.responder');
 
-Route::get('solicitacoes/email-content/edit', [EmailContentController::class, 'edit'])->name('email-content.edit');
-Route::post('solicitacoes/email-content/{id}/update', [EmailContentController::class, 'update'])->name('email-content.update');
 

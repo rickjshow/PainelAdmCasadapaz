@@ -109,55 +109,5 @@
             </div>
         </div>
 
-        <!-- Exemplo de um botão que abre o modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarEmailModal"
-    data-id="{{ $emailContent->id }}" data-content="{{ $emailContent->conteudo_email }}">
-    Editar E-mail
-</button>
-
-<div class="modal fade" id="editarEmailModal" tabindex="-1" aria-labelledby="editarEmailModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Editar Conteúdo do E-mail</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="emailContentForm" action="{{ route('email-content.update', 0) }}" method="POST">
-                    @csrf
-                    <input type="hidden" id="emailContentId" name="id" value="">
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Conteúdo do E-mail:</label>
-                        <textarea class="form-control" id="content" name="content" rows="10"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Salvar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Quando o modal for exibido
-    $('#editarEmailModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Botão que acionou o modal
-        var id = button.getAttribute('data-id'); // Extraindo o ID do botão
-        var content = button.getAttribute('data-content'); // Extraindo o conteúdo do botão
-
-        // Preenche o textarea com o conteúdo retornado
-        document.getElementById('content').value = content;
-
-        // Atualiza o campo oculto com o ID do conteúdo
-        document.getElementById('emailContentId').value = id;
-
-        // Atualiza a ação do formulário para incluir o ID do conteúdo
-        document.getElementById('emailContentForm').action = '{{ route("email-content.update", ":id") }}'.replace(':id', id);
-    });
-</script>
-
-
     </div>
 </x-app-layout>
