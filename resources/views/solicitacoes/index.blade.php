@@ -160,12 +160,20 @@
                     @csrf
                     @method('PUT')
 
-                    @foreach($textosEmail as $template)
-                        <div class="mb-3">
-                            <label for="template_{{ $template->id }}" class="form-label">{{ $template->titulo }}</label>
-                            <textarea class="form-control" id="template_{{ $template->id }}" name="template_{{ $template->id }}" rows="4">{{ $template->texto }}</textarea>
-                        </div>
-                    @endforeach
+                    @if($textosEmail && $textosEmail->isNotEmpty())
+                        @foreach($textosEmail as $template)
+                            <div class="mb-3">
+                                <label for="template_{{ $template->id }}" class="form-label">{{ $template->key }}</label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="template_{{ $template->id }}" 
+                                    name="templates[{{ $template->id }}][conteudo]" 
+                                    rows="4">{{ $template->conteudo }}</textarea>
+                            </div>
+                        @endforeach
+                    @else
+                        <p>Nenhum template encontrado.</p>
+                    @endif
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Salvar Alterações</button>

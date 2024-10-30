@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class TemplateEmailController extends Controller
 {
 
-    public function update(Request $request) {
-
+    public function update(Request $request)
+    {
         $request->validate([
             'templates.*.conteudo' => 'required|string|max:255',
         ]);
@@ -27,5 +27,4 @@ class TemplateEmailController extends Controller
 
         return redirect()->back()->with('success', 'Templates atualizados com sucesso');
     }
-
 }

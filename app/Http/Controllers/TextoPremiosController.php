@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BannerPremio;
-use App\Models\Premio;
-use App\Models\TextoPremio;
 use Illuminate\Http\Request;
+use App\Models\TextoPremio;
 
-class PremiosController extends Controller
+class TextoPremiosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $img = BannerPremio::all()->first();
         $texto = TextoPremio::all()->first();
-        $premios = Premio::all();
 
-        return view('premios.index', compact('img', 'texto', 'premios'));
+        return view('premios.index', compact('texto'));
     }
 
     /**
@@ -34,7 +30,15 @@ class PremiosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'texto_principal' => 'required|string'
+        ]);
+
+        TextoPremio::create([
+            'texto_principal' => $request->texto_principal
+        ]);
+
+        return redirect()->route('premios.index')->with('success', 'Texto inserido com sucesso!');
     }
 
     /**
@@ -58,7 +62,17 @@ class PremiosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'texto_principal' => 'required|string'
+        ]);
+
+        $texto = TextoPremio::findOrFail($id);
+
+        $texto->update([
+            'texto_principal' => $request->texto_principal
+        ]);
+
+        return redirect()->route('premios.index')->with('success', 'Texto Alterado com sucesso!');
     }
 
     /**
