@@ -2,7 +2,9 @@
 
 namespace App\Mail;
 
+use App\Models\Contato;
 use App\Models\EmailTemplate;
+use App\Models\TemplateEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -24,14 +26,22 @@ class RespostaSolicitacaoMail extends Mailable
     }
 
     public function build()
-    {
-        return $this->view('emails.resposta_solicitacao')
-                    ->with([
-                        'solicitacao' => $this->solicitacao,
-                        'mensagem' => $this->mensagem,
-                    ])
-                    ->subject('Resposta à Sua Solicitação');
-    }
+{
+    $textosEmail = TemplateEmail::whereIn('key', ['ola', 'agradecimento', 'aprovacao', 'recusa', 'despedida'])
+                                ->pluck('conteudo', 'key');
+
+    $endereco = Contato::all()->first();
+
+    return $this->view('emails.resposta_solicitacao')
+                ->with([
+                    'solicitacao' => $this->solicitacao,
+                    'mensagem' => $this->mensagem,
+                    'textosEmail' => $textosEmail,
+                    'endereco' => $endereco
+                ])
+                ->subject('Resposta à Sua Solicitação');
+}
+
 
     /**
      * Get the message envelope.

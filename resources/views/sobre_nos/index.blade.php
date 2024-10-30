@@ -136,7 +136,7 @@
             Adicionar Membro
         </button>
 
-        <div class="row">
+    <div class="row">
     @if(isset($equipes) && $equipes->isNotEmpty())
         @foreach ($equipes as $equipe)
             <div class="col-md-2 text-center mb-4">

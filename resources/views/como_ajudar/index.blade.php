@@ -91,61 +91,66 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($content as $item)
-                            <tr>
-                                <td class="text-center">{{ $item->titulo }}</td>
-                                <td class="text-center" style="max-width: 500px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    {{ $item->descricao }}
-                                </td> 
-                                <td class="text-center">
-                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal{{ $item->id }}">
-                                        Editar
-                                    </button>
-
-                                    <form class="delete-form" action="{{ route('como-ajudar.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger delete-btn">
-                                            <i class="fas fa-trash-alt"></i> Excluir
+                            @if(isset($content) && $content->isNotEmpty())
+                                @foreach($content as $item)
+                                <tr>
+                                    <td class="text-center">{{ $item->titulo }}</td>
+                                    <td class="text-center" style="max-width: 500px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ $item->descricao }}
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal{{ $item->id }}">
+                                            Editar
                                         </button>
-                                    </form>
-                                </td>
-                            </tr>
 
-                            <!-- Modal para edição -->
-                            <div class="modal fade" id="editItemModal{{ $item->id }}" tabindex="-1" aria-labelledby="editItemModalLabel{{ $item->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editItemModalLabel">Editar Item</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('como-ajudar.update', $item->id) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="mb-3">
-                                                    <label for="titulo" class="form-label">Título</label>
-                                                    <input type="text" class="form-control" id="titulo" value="{{ $item->titulo }}" name="titulo" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="descricao" class="form-label">Descrição</label>
-                                                    <textarea class="form-control" id="descricao" name="descricao" rows="3" required>{{ $item->descricao }}</textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-success">Salvar</button>
-                                                </div>
-                                            </form>
+                                        <form class="delete-form" action="{{ route('como-ajudar.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger delete-btn">
+                                                <i class="fas fa-trash-alt"></i> Excluir
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <!-- Modal para edição -->
+                                <div class="modal fade" id="editItemModal{{ $item->id }}" tabindex="-1" aria-labelledby="editItemModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editItemModalLabel">Editar Item</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('como-ajudar.update', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="mb-3">
+                                                        <label for="titulo" class="form-label">Título</label>
+                                                        <input type="text" class="form-control" id="titulo" value="{{ $item->titulo }}" name="titulo" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="descricao" class="form-label">Descrição</label>
+                                                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required>{{ $item->descricao }}</textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-success">Salvar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            @endforeach
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="3" class="text-center">Não existem dados cadastrados.</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
             <div class="tab-pane fade" id="nova-aba" role="tabpanel" aria-labelledby="nova-aba-tab">

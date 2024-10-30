@@ -1,17 +1,14 @@
-<p>Ola, {{ $solicitacao->nome }}</p>
-
-<p>Muito obrigado pela sua solicitação para a vaga de {{ $solicitacao->vaga }}</p>
+<p>{!! $textosEmail['ola'] !!} {{ $solicitacao->nome }}</p>
+<p>{!! $textosEmail['agradecimento'] !!} {{ $solicitacao->vaga }}</p>
 
 @if($solicitacao->aprovacao === 'aprovada')
-    <p>Ficamos muito felizes em comunicar que você foi aprovado para colaborar com a Casa da Paz</p>
+    <p>{!! $textosEmail['aprovacao'] !!} {{ $endereco->endereco_sede }}</p>
 @else
-    <p>Infelizmente a vaga para qual foi inscrito(a) já foi preenchida</p>
-
-    <p>Mas não desanime, logo mais teremos mais oportunidades, fique atento!</p>
+    <p>{!! $textosEmail['recusa'] !!}</p>
 @endif
 
-@if(isset($solicitacao->resposta))
-    <p>{{ $solicitacao->resposta }}</p>
+@if(isset($mensagem))
+    <p>{{ $mensagem }}</p>
 @endif
 
-<p>Atenciosamente, Casa da Paz</p>
+<p>{!! $textosEmail['despedida'] !!}</p>

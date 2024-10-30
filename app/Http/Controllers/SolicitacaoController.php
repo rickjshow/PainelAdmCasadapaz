@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Mail\RespostaSolicitacaoMail;
 use App\Models\Solicitacao;
+use App\Models\TemplateEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class SolicitacaoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
+        $textosEmail = TemplateEmail::all();
         $novasSolicitacoes = Solicitacao::where('status', 'pendente')->get();
         $solicitacoesRespondidas = Solicitacao::where('status', 'respondida')->get();
 
-        return view('solicitacoes.index', compact('novasSolicitacoes', 'solicitacoesRespondidas'));
+        return view('solicitacoes.index', compact('novasSolicitacoes', 'solicitacoesRespondidas', 'textosEmail'));
     }
 
     public function responder(Request $request, $id)
@@ -34,7 +34,6 @@ class SolicitacaoController extends Controller
         $solicitacao->mensagem_resposta = $request->input('resposta');
         $solicitacao->save();
 
-        // Enviar e-mail
         Mail::to($solicitacao->email)->send(new RespostaSolicitacaoMail($solicitacao, $request->input('resposta')));
 
         return redirect()->route('solicitacoes.index')->with('success', 'Solicitação respondida e e-mail enviado com sucesso!');
