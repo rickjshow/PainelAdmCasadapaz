@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Evento;
 use Illuminate\Http\Request;
 
 class EventoController extends Controller
@@ -11,7 +12,8 @@ class EventoController extends Controller
      */
     public function index()
     {
-        //
+        $eventos = Evento::withCount(['fotos', 'videos'])->get();
+        return view('galeria.evento', compact('eventos'));
     }
 
     /**
@@ -19,7 +21,7 @@ class EventoController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -27,7 +29,19 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'titulo' => 'required|string',
+            'descricao' => 'required|string',
+            'data' => 'required|date'
+        ]);
+
+        Evento::create([
+            'titulo' => $request->titulo,
+            'descricao' => $request->descricao,
+            'data' => $request->data
+        ]);
+
+        return redirect()->back()->with('success', 'Evento adicionado com sucesso!');
     }
 
     /**
@@ -51,7 +65,21 @@ class EventoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $evento = Evento::findOrFail($id);
+
+        $request->validate([
+            'titulo' => 'required|string',
+            'descricao' => 'required|string',
+            'data' => 'required|date'
+        ]);
+
+        $evento->update([
+            'titulo' => $request->titulo,
+            'descricao' => $request->descricao,
+            'data' => $request->data
+        ]);
+
+        return redirect()->back()->with('success', 'Evento atualizado com sucesso!');
     }
 
     /**
@@ -59,6 +87,10 @@ class EventoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $evento = Evento::findOrFail($id);
+
+        $evento->delete();
+
+        return redirect()->back()->with('success', 'Evento excluido com sucesso!');
     }
 }

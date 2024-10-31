@@ -19,4 +19,14 @@ class Evento extends Model
     {
         return $this->hasMany(Galeria::class);
     }
+
+    public function fotos()
+    {
+        return $this->galeria()->where('tipo', 'foto');
+    }
+
+    public function videos()
+    {
+        return $this->galeria()->where('tipo', 'video');
+    }
 }

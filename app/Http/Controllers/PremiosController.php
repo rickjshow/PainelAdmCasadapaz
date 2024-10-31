@@ -109,6 +109,10 @@ class PremiosController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $premio = Premio::findOrFail($id);
+
+        $premio->delete();
+
+        return redirect()->back()->with('success', 'Prêmio deletado com sucesso!');
     }
 }

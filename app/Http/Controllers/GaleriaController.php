@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BannerGaleria;
+use App\Models\Evento;
+use App\Models\Galeria;
 use Illuminate\Http\Request;
 
 class GaleriaController extends Controller
@@ -10,10 +12,26 @@ class GaleriaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $eventos = Evento::withCount(['fotos', 'videos'])->get();
         $img = BannerGaleria::all()->first();
-        return view('galeria.index', compact('img'));
+        $query = Galeria::query();
+
+        if ($request->filled('evento_id')) {
+            $query->where('evento_id', $request->evento_id);
+        }
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
+        }
+        if ($request->filled('data_inicio') && $request->filled('data_fim')) {
+            $query->whereBetween('created_at', [$request->data_inicio, $request->data_fim]);
+        }
+    
+        $galeria = $query->get();
+        $eventos = Evento::all();
+    
+        return view('galeria.index', compact('galeria', 'eventos', 'img'));
     }
 
     /**
@@ -29,7 +47,23 @@ class GaleriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'evento_id' => 'required|exists:eventos,id',
+            'tipo' => 'required|in:foto,video',
+            'arquivo.*' => 'required|file'
+        ]);
+    
+        foreach ($request->file('arquivo') as $file) {
+            $path = $file->store('public/galeria');
+            
+            Galeria::create([
+                'evento_id' => $request->evento_id,
+                'tipo' => $request->tipo,
+                'arquivo' => $path
+            ]);
+        }
+    
+        return redirect()->back()->with('success', 'Arquivos adicionados com sucesso.');
     }
 
     /**

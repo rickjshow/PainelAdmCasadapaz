@@ -254,7 +254,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="foto" class="form-label">Foto</label>
-                                <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 405x417</h5>
+                                <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 325x272</h5>
                                 <input type="file" class="form-control" name="foto" accept="image/*" required>
                             </div>
                         </div>

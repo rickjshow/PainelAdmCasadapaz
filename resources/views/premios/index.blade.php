@@ -38,33 +38,6 @@
             <button type="submit" class="btn btn-success mt-2 mb-5">Salvar</button>
         </form>
 
-        <script>
-            function removeBanner(id, type) {
-                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(`{{ url('/imagens') }}/${id}/remover/premios`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: type })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
-                        } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
-                            throw new Error('Erro na resposta');
-                        }
-                    })
-                    .then(() => {
-                        location.reload();
-                    })
-                    .catch(error => console.error('Erro:', error));
-                });
-            }
-        </script>
-
         <form action="{{ isset($texto) ? route('texto.update', $texto->id) : route('texto.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($texto))
@@ -90,57 +63,61 @@
                     Adicionar Novo Prêmio
                 </button>
             </div>
-            @foreach ($premios as $premio)
-                <div class="col-md-3 mb-4">
-                    <div class="card shadow-md rounded-lg p-3 text-center">
-                        <img src="{{ asset('storage/' . $premio->imagem) }}" class="img-fluid mb-2" style="width: 100%; height: 100%; object-fit: cover;" alt="Imagem do Prêmio">
-                        <h5 class="font-semibold">{{ $premio->nome }}</h5>
-                        <div class="d-flex justify-content-center mt-2">
-                        <button type="button" class="btn btn-warning open-modal-btn mr-2" data-id="{{ $premio->id }}">
-                            Editar
-                        </button>
-                            <form action="{{ route('premios.destroy', $premio->id) }}" method="POST" class="d-inline delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="btn btn-danger delete-btn">Excluir</button>
-                            </form>
+            @if(isset($premios) && $premios->isNotEmpty())
+                @foreach ($premios as $premio)
+                    <div class="col-md-3 mb-4 mt-4">
+                        <div class="card shadow-md rounded-lg p-3 text-center">
+                            <img src="{{ asset('storage/' . $premio->imagem) }}" class="img-fluid mb-2" style="width: 100%; height: 100%; object-fit: cover;" alt="Imagem do Prêmio">
+                            <h5 class="font-semibold">{{ $premio->nome }}</h5>
+                            <div class="d-flex justify-content-center mt-2">
+                            <button type="button" class="btn btn-warning open-modal-btn mr-2" data-id="{{ $premio->id }}">
+                                Editar
+                            </button>
+                                <form action="{{ route('premios.destroy', $premio->id) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-danger delete-btn">Excluir</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="modalEdit{{ $premio->id }}" tabindex="-1" aria-labelledby="modalEditLabel{{ $premio->id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="{{ route('premios.update', $premio->id) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalEditLabel{{ $premio->id }}">Editar Premios</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="nome" class="form-label">Nome</label>
+                                        <input type="text" class="form-control" name="nome" value="{{ $premio->nome }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descricao" class="form-label">Descricao</label>
+                                        <textarea class="form-control" name="descricao" required>{{ $premio->descricao }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="imagem" class="form-label">Imagem</label>
+                                        <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 325x272</h5>
+                                        <input type="file" class="form-control" name="imagem" accept="image/*">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="modal fade" id="modalEdit{{ $premio->id }}" tabindex="-1" aria-labelledby="modalEditLabel{{ $premio->id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <form action="{{ route('premios.update', $premio->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalEditLabel{{ $premio->id }}">Editar Premios</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="nome" class="form-label">Nome</label>
-                                    <input type="text" class="form-control" name="nome" value="{{ $premio->nome }}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="descricao" class="form-label">Descricao</label>
-                                    <textarea class="form-control" name="descricao" required>{{ $premio->descricao }}</textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="imagem" class="form-label">Imagem</label>
-                                    <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 405x417</h5>
-                                    <input type="file" class="form-control" name="imagem" accept="image/*">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-success">Salvar Alterações</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            @endforeach
+                @endforeach
+            @else
+                <p class="text-center">Nenhum prêmio encontrado</p>
+            @endif
         </div>
 
         <div class="modal fade" id="addPremioModal" tabindex="-1" aria-labelledby="addPremioModalLabel" aria-hidden="true">
@@ -189,6 +166,64 @@
                 });
             });
         });
+
+        function removeBanner(id, type) {
+                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
+                    fetch(`{{ url('/imagens') }}/${id}/remover/premios`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type: type })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
+                        } else {
+                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
+                            throw new Error('Erro na resposta');
+                        }
+                    })
+                    .then(() => {
+                        location.reload();
+                    })
+                    .catch(error => console.error('Erro:', error));
+                });
+            }
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const form = this.closest('.delete-form');
+                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _method: 'DELETE',
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            showSuccessAlert('Excluído!', 'O membro foi excluído com sucesso.')
+                                .then(() => {
+                                    location.reload();
+                                });
+                        } else {
+                            showErrorAlert('Erro!', 'Não foi possível excluir o membro.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        showErrorAlert('Erro!', 'Ocorreu um erro ao excluir o membro.');
+                    });
+                });
+            });
+        });
+            
     </script>
 
 </x-app-layout>
