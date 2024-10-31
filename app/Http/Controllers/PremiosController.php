@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BannerPremio;
 use App\Models\Premio;
 use App\Models\TextoPremio;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class PremiosController extends Controller
@@ -33,9 +34,27 @@ class PremiosController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
+{
+    $request->validate([
+        'nome' => 'required|string|max:255',
+        'descricao' => 'required|string',
+        'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $fotoPath = null;
+            if ($request->hasFile('imagem')) {
+                $fotoPath = $request->file('imagem')->store('imagem_premios');
+            }
+
+            Premio::create([
+                'nome' => $request->nome,
+                'descricao' => $request->descricao,
+                'imagem' => $fotoPath
+            ]);
+
+    return redirect()->back()->with('success', 'Prêmio adicionado com sucesso!');
+}
+
 
     /**
      * Display the specified resource.
@@ -58,7 +77,31 @@ class PremiosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $premio = Premio::findOrFail($id);
+
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $fotoPath = $premio->imagem;
+
+        if ($request->hasFile('imagem')) {
+
+            if ($fotoPath) {
+                Storage::delete($fotoPath);
+            }
+            $fotoPath = $request->file('imagem')->store('imagem_premios');
+        }
+
+        $premio->update([
+            'nome' => $request->nome,
+            'descricao' => $request->descricao,
+            'imagem' => $fotoPath
+        ]);
+
+        return redirect()->back()->with('success', 'Prêmio atualizado com sucesso!');
     }
 
     /**

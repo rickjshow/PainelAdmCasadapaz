@@ -83,5 +83,112 @@
                 </div>
         </form>
 
+        <div class="row mt-5">
+            <h3 class="text-2xl font-bold mb-4 text-center">Prêmios da Casa da Paz</h3>
+            <div class="d-flex mb-4">
+                <button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#addPremioModal">
+                    Adicionar Novo Prêmio
+                </button>
+            </div>
+            @foreach ($premios as $premio)
+                <div class="col-md-3 mb-4">
+                    <div class="card shadow-md rounded-lg p-3 text-center">
+                        <img src="{{ asset('storage/' . $premio->imagem) }}" class="img-fluid mb-2" style="width: 100%; height: 100%; object-fit: cover;" alt="Imagem do Prêmio">
+                        <h5 class="font-semibold">{{ $premio->nome }}</h5>
+                        <div class="d-flex justify-content-center mt-2">
+                        <button type="button" class="btn btn-warning open-modal-btn mr-2" data-id="{{ $premio->id }}">
+                            Editar
+                        </button>
+                            <form action="{{ route('premios.destroy', $premio->id) }}" method="POST" class="d-inline delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger delete-btn">Excluir</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalEdit{{ $premio->id }}" tabindex="-1" aria-labelledby="modalEditLabel{{ $premio->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('premios.update', $premio->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditLabel{{ $premio->id }}">Editar Premios</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="nome" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" name="nome" value="{{ $premio->nome }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descricao" class="form-label">Descricao</label>
+                                    <textarea class="form-control" name="descricao" required>{{ $premio->descricao }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="imagem" class="form-label">Imagem</label>
+                                    <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 405x417</h5>
+                                    <input type="file" class="form-control" name="imagem" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="modal fade" id="addPremioModal" tabindex="-1" aria-labelledby="addPremioModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPremioModalLabel">Adicionar Novo Prêmio</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('premios.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome do Prêmio</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagem" class="form-label">Imagem do Prêmio</label>
+                                <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var openModalBtns = document.querySelectorAll('.open-modal-btn');
+
+            openModalBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = this.getAttribute('data-id');
+                    var modal = document.getElementById('modalEdit' + id);
+                    var modalInstance = new bootstrap.Modal(modal);
+                    modalInstance.show();
+                });
+            });
+        });
+    </script>
+
 </x-app-layout>

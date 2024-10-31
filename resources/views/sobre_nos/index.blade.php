@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container-fluid mt-4 p-4">
-        
+
     @if(session('success'))
         <div class="alert alert-success" role="alert">
             {{ session('success') }}
@@ -146,7 +146,7 @@
     <div class="row">
     @if(isset($equipes) && $equipes->isNotEmpty())
         @foreach ($equipes as $equipe)
-            <div class="col-md-2 text-center mb-4">
+            <div class="col-md-3 text-center mb-4">
                 <div class="card mb-4 shadow-sm border-light">
                     <div style="overflow: hidden;">
                         <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe" style="width: 100%; height: 100%; object-fit: cover;">
