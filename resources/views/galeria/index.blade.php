@@ -51,84 +51,106 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="galeria" role="tabpanel" aria-labelledby="galeria-tab">
                 <div class="d-flex justify-content-between mb-4">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addArquivoModal">
-                        Adicionar Arquivo
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addArquivoModal" style="height: 40px; margin-top: 30px;">
+                        <i class="fas fa-plus"></i> Adicionar Arquivo
                     </button>
 
                     <form method="GET" action="{{ route('galeria.index') }}" class="d-flex align-items-center mb-4">
-                        <select name="evento_id" class="form-control me-2">
-                            <option value="">Selecione um Evento</option>
-                            @foreach($eventos as $evento)
-                                <option value="{{ $evento->id }}">{{ $evento->titulo }}</option>
-                            @endforeach
-                        </select>
-                        <select name="tipo" class="form-control me-2">
-                            <option value="">Selecione o Tipo</option>
-                            <option value="foto">Fotos</option>
-                            <option value="video">Vídeos</option>
-                        </select>
-                        <input type="date" name="data_inicio" class="form-control me-2" placeholder="Data Início">
-                        <input type="date" name="data_fim" class="form-control me-2" placeholder="Data Fim">
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <div class="me-2">
+                            <label for="evento_id" class="form-label">Evento</label>
+                            <select id="evento_id" name="evento_id" class="form-control" style="width: 200px;">
+                                <option value="">Selecione um Evento</option>
+                                @foreach($eventos as $evento)
+                                    <option value="{{ $evento->id }}">{{ $evento->titulo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="me-2">
+                            <label for="tipo" class="form-label">Tipo</label>
+                            <select id="tipo" name="tipo" class="form-control" style="width: 200px;">
+                                <option value="">Selecione o Tipo</option>
+                                <option value="foto">Fotos</option>
+                                <option value="video">Vídeos</option>
+                            </select>
+                        </div>
+                        <div class="me-2">
+                            <label for="data_inicio" class="form-label">Data Início</label>
+                            <input type="date" id="data_inicio" name="data_inicio" class="form-control" placeholder="Data Início">
+                        </div>
+                        <div class="me-2">
+                            <label for="data_fim" class="form-label">Data Fim</label>
+                            <input type="date" id="data_fim" name="data_fim" class="form-control" placeholder="Data Fim">
+                        </div>
+                        <button type="submit" class="btn btn-primary ml-4" style="height: 40px; margin-top: 30px;">Filtrar</button>
                     </form>
                 </div>
 
+        <<div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="galeria" role="tabpanel" aria-labelledby="galeria-tab">
                 <div class="row">
-                    @foreach($galeria as $item)
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img src="{{ asset('storage/' . $item->arquivo) }}" class="card-img-top" alt="Imagem ou Vídeo">
-                                <div class="card-body text-center">
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('{{ $item->id }}')">
-                                        <i class="fa fa-trash"></i> Excluir
-                                    </button>
+                    @if(isset($galeria) && $galeria->isNotEmpty())
+                        @foreach($galeria as $item)
+                            <div class="col-md-3 mb-4">
+                                <div class="card" style="height: 300px; width: 100%;">
+                                    <div class="card-img-top" style="height: 200px; overflow: hidden;">
+                                        <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('{{ $item->id }}')">
+                                            <i class="fa fa-trash"></i> Excluir
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="modal fade" id="addArquivoModal" tabindex="-1" aria-labelledby="addArquivoModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="{{ route('galeria.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="addArquivoModalLabel">Adicionar Arquivo</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="evento_id">Evento</label>
-                                        <select name="evento_id" class="form-control" required>
-                                            <option value="">Selecione um Evento</option>
-                                            @foreach($eventos as $evento)
-                                                <option value="{{ $evento->id }}">{{ $evento->titulo }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tipo">Tipo</label>
-                                        <select name="tipo" class="form-control" id="tipo" required>
-                                            <option value="">Selecione um tipo de arquivo</option>
-                                            <option value="foto">Foto</option>
-                                            <option value="video">Vídeo</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="arquivo">Arquivo(s)</label>
-                                        <input type="file" name="arquivo[]" class="form-control" accept="image/*,video/*" multiple required>
-                                        <small>O tipo selecionado determina se apenas fotos ou vídeos serão enviados.</small>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Salvar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <p class="text-center mt-4">Nenhuma foto ou vídeo encontrado</p>
+                    @endif
                 </div>
             </div>
+        </div>
+
+        <div class="modal fade" id="addArquivoModal" tabindex="-1" aria-labelledby="addArquivoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('galeria.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addArquivoModalLabel">Adicionar Arquivo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="evento_id">Evento</label>
+                                <select name="evento_id" class="form-control" required>
+                                    <option value="">Selecione um Evento</option>
+                                    @foreach($eventos as $evento)
+                                        <option value="{{ $evento->id }}">{{ $evento->titulo }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipo">Tipo</label>
+                                <select name="tipo" class="form-control" id="tipo" required>
+                                    <option value="">Selecione um tipo de arquivo</option>
+                                    <option value="foto">Foto</option>
+                                    <option value="video">Vídeo</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="arquivo">Arquivo(s)</label>
+                                <input type="file" name="arquivo[]" class="form-control" accept="image/*,video/*" multiple required>
+                                <small>O tipo selecionado determina se apenas fotos ou vídeos serão enviados.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
             <div class="tab-pane fade" id="nova-aba" role="tabpanel" aria-labelledby="nova-aba-tab">
                 @include('galeria.evento')
@@ -136,48 +158,78 @@
         </div>
 
         <script>
-            function removeBanner(id, type) {
-                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(`{{ url('/imagens') }}/${id}/remover/galeria`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: type })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
-                        } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
-                            throw new Error('Erro na resposta');
-                        }
-                    })
-                    .then(() => {
-                        location.reload();
-                    })
-                    .catch(error => console.error('Erro:', error));
+            function confirmDelete(id) {
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: "Você não poderá reverter isso!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`{{ url('/galeria') }}/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire(
+                                    'Excluído!',
+                                    'O item foi excluído com sucesso.',
+                                    'success'
+                                ).then(() => location.reload());
+                            } else {
+                                Swal.fire(
+                                    'Erro!',
+                                    'Não foi possível excluir o item.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
                 });
             }
 
-            function confirmDelete(id) {
-                if (confirm('Tem certeza de que deseja excluir este item?')) {
-                    fetch(`{{ url('/galeria') }}/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            alert('Erro ao excluir o item.');
-                        }
-                    });
-                }
+            function confirmDeleteBanner(id, type) {
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: "Você não poderá reverter isso!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`{{ url('/imagens') }}/${id}/remover/galeria`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ type: type })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire(
+                                    'Excluído!',
+                                    'O banner foi excluído com sucesso.',
+                                    'success'
+                                ).then(() => location.reload());
+                            } else {
+                                Swal.fire(
+                                    'Erro!',
+                                    'Não foi possível excluir o banner.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
             }
         </script>
     </div>

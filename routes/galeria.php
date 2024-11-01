@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/galeria', [GaleriaController::class, 'index'])->name('galeria.index');
 Route::post('/galeria', [GaleriaController::class, 'store'])->name('galeria.store');
-Route::delete('/galeria/{id}', [GaleriaController::class, 'destroy'])->name('galeria.destroy');
+Route::delete('/galeria/{id}/destroy', [GaleriaController::class, 'destroy'])->name('galeria.destroy');
 
 
 Route::post('/galeria/banners/store', [BannersGaleriaController::class, 'store'])->name('banners-galeria.store');
