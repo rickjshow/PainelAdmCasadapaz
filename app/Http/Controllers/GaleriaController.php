@@ -6,6 +6,8 @@ use App\Models\BannerGaleria;
 use App\Models\Evento;
 use App\Models\Galeria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class GaleriaController extends Controller
 {
@@ -29,7 +31,6 @@ class GaleriaController extends Controller
         }
     
         $galeria = $query->get();
-        $eventos = Evento::all();
     
         return view('galeria.index', compact('galeria', 'eventos', 'img'));
     }
@@ -46,25 +47,33 @@ class GaleriaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'evento_id' => 'required|exists:eventos,id',
-            'tipo' => 'required|in:foto,video',
-            'arquivo.*' => 'required|file'
-        ]);
-    
-        foreach ($request->file('arquivo') as $file) {
-            $path = $file->store('public/galeria');
-            
-            Galeria::create([
-                'evento_id' => $request->evento_id,
-                'tipo' => $request->tipo,
-                'arquivo' => $path
-            ]);
+{
+    $request->validate([
+        'arquivo.*' => 'required|file'
+    ]);
+
+    foreach ($request->file('arquivo') as $file) {
+        $tipo = Str::startsWith($file->getMimeType(), 'image') ? 'foto' : 'video';
+
+        if($tipo === 'foto')
+        {
+            $path = $file->store('fotos_galeria', 'public');
+        } elseif($tipo === 'video')
+        {
+            $path = $file->store('videos_galeria', 'public');
         }
-    
-        return redirect()->back()->with('success', 'Arquivos adicionados com sucesso.');
+        
+
+        Galeria::create([
+            'evento_id' => $request->evento_id,
+            'tipo' => $tipo,
+            'arquivo' => $path
+        ]);
     }
+
+    return redirect()->back()->with('success', 'Arquivos adicionados com sucesso.');
+}
+
 
     /**
      * Display the specified resource.
@@ -95,6 +104,17 @@ class GaleriaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $item = Galeria::findOrFail($id);
+
+        if ($item->arquivo && Storage::disk('public')->exists($item->arquivo)) {
+            Storage::disk('public')->delete($item->arquivo);
+        }
+
+        $item->delete();
+
+        return response()->json([
+            'message' => 'Imagem excluída com sucesso!',
+            'redirect_url' => route('galeria.index')
+        ], 200);
     }
 }
