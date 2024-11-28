@@ -6,6 +6,8 @@ use App\Models\BannerGaleria;
 use App\Models\Evento;
 use App\Models\Galeria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage; // Para manipulação de arquivos
+
 
 class GaleriaController extends Controller
 {
@@ -27,10 +29,10 @@ class GaleriaController extends Controller
         if ($request->filled('data_inicio') && $request->filled('data_fim')) {
             $query->whereBetween('created_at', [$request->data_inicio, $request->data_fim]);
         }
-    
+
         $galeria = $query->get();
         $eventos = Evento::all();
-    
+
         return view('galeria.index', compact('galeria', 'eventos', 'img'));
     }
 
@@ -52,17 +54,17 @@ class GaleriaController extends Controller
             'tipo' => 'required|in:foto,video',
             'arquivo.*' => 'required|file'
         ]);
-    
+
         foreach ($request->file('arquivo') as $file) {
             $path = $file->store('public/galeria');
-            
+
             Galeria::create([
                 'evento_id' => $request->evento_id,
                 'tipo' => $request->tipo,
                 'arquivo' => $path
             ]);
         }
-    
+
         return redirect()->back()->with('success', 'Arquivos adicionados com sucesso.');
     }
 
@@ -93,8 +95,19 @@ class GaleriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $item = Galeria::findOrFail($id);
+
+        // Remove o arquivo físico do armazenamento
+        if ($item->arquivo && Storage::exists('public/' . $item->arquivo)) {
+            Storage::delete('public/' . $item->arquivo);
+        }
+
+        // Remove o registro do banco de dados
+        $item->delete();
+
+        return redirect()->route('galeria.index')->with('success', 'Item excluído com sucesso.');
     }
+
 }

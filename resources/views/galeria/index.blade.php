@@ -12,7 +12,7 @@
                         <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1920x170 </h4>
                         @if(isset($img) && $img->banner_principal)
                             <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px; max-height: 50px;" />
-                            <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeBanner('{{ $img->id }}', 'banner_principal')">
+                            <button type="button" class="btn btn-danger btn-sm mt-3" onclick="confirmDeleteBanner('{{ $img->id }}', 'banner_principal')">
                                 <i class="fa fa-trash"></i> Excluir
                             </button>
                         @endif
@@ -26,7 +26,7 @@
                         <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1000x500</h4>
                         @if(isset($img) && $img->banner_principal_mobile)
                             <img src="{{ asset('storage/' . $img->banner_principal_mobile) }}" class="img-fluid mb-2" style="max-width: 120px; max-height: 50px;" />
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeBanner('{{ $img->id }}', 'banner_principal_mobile')">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteBanner('{{ $img->id }}', 'banner_principal_mobile')">
                                 <i class="fa fa-trash"></i> Excluir
                             </button>
                         @endif
@@ -85,24 +85,28 @@
                     </form>
                 </div>
 
-        <<div class="tab-content" id="myTabContent">
+        <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="galeria" role="tabpanel" aria-labelledby="galeria-tab">
                 <div class="row">
                     @if(isset($galeria) && $galeria->isNotEmpty())
-                        @foreach($galeria as $item)
-                            <div class="col-md-3 mb-4">
-                                <div class="card" style="height: 300px; width: 100%;">
-                                    <div class="card-img-top" style="height: 200px; overflow: hidden;">
-                                        <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('{{ $item->id }}')">
+                    @foreach($galeria as $item)
+                        <div class="col-md-3 mb-4">
+                            <div class="card" style="height: 300px; width: 100%;">
+                                <div class="card-img-top" style="height: 200px; overflow: hidden;">
+                                    <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
+                                </div>
+                                <div class="card-body text-center">
+                                    <form action="{{ route('galeria.destroy', $item->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fa fa-trash"></i> Excluir
                                         </button>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
+                    @endforeach
                     @else
                         <p class="text-center mt-4">Nenhuma foto ou vídeo encontrado</p>
                     @endif
@@ -158,7 +162,9 @@
         </div>
 
         <script>
-            function confirmDelete(id) {
+            function confirmDelete(event) {
+                event.preventDefault(); // Evita o envio imediato do formulário
+
                 Swal.fire({
                     title: 'Tem certeza?',
                     text: "Você não poderá reverter isso!",
@@ -169,30 +175,19 @@
                     confirmButtonText: 'Sim, excluir!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch(`{{ url('/galeria') }}/${id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                Swal.fire(
-                                    'Excluído!',
-                                    'O item foi excluído com sucesso.',
-                                    'success'
-                                ).then(() => location.reload());
-                            } else {
-                                Swal.fire(
-                                    'Erro!',
-                                    'Não foi possível excluir o item.',
-                                    'error'
-                                );
-                            }
+                        // Envia o formulário após confirmação e exibe o alerta de sucesso
+                        event.target.submit();
+                        Swal.fire(
+                            'Excluído!',
+                            'A imagem foi excluída com sucesso.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); // Recarrega a página para atualizar a lista de imagens
                         });
                     }
                 });
             }
+
 
             function confirmDeleteBanner(id, type) {
                 Swal.fire({
