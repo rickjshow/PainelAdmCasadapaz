@@ -6,8 +6,8 @@ use App\Models\BannerGaleria;
 use App\Models\Evento;
 use App\Models\Galeria;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage; // Para manipulação de arquivos
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class GaleriaController extends Controller
 {
@@ -31,7 +31,6 @@ class GaleriaController extends Controller
         }
 
         $galeria = $query->get();
-        $eventos = Evento::all();
 
         return view('galeria.index', compact('galeria', 'eventos', 'img'));
     }
@@ -50,23 +49,31 @@ class GaleriaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'evento_id' => 'required|exists:eventos,id',
-            'tipo' => 'required|in:foto,video',
             'arquivo.*' => 'required|file'
         ]);
 
         foreach ($request->file('arquivo') as $file) {
-            $path = $file->store('public/galeria');
+            $tipo = Str::startsWith($file->getMimeType(), 'image') ? 'foto' : 'video';
+
+            if($tipo === 'foto')
+            {
+                $path = $file->store('fotos_galeria', 'public');
+            } elseif($tipo === 'video')
+            {
+                $path = $file->store('videos_galeria', 'public');
+            }
+
 
             Galeria::create([
                 'evento_id' => $request->evento_id,
-                'tipo' => $request->tipo,
+                'tipo' => $tipo,
                 'arquivo' => $path
             ]);
         }
 
         return redirect()->back()->with('success', 'Arquivos adicionados com sucesso.');
     }
+
 
     /**
      * Display the specified resource.
@@ -99,15 +106,16 @@ class GaleriaController extends Controller
     {
         $item = Galeria::findOrFail($id);
 
-        // Remove o arquivo físico do armazenamento
-        if ($item->arquivo && Storage::exists('public/' . $item->arquivo)) {
-            Storage::delete('public/' . $item->arquivo);
+        if ($item->arquivo && Storage::disk('public')->exists($item->arquivo)) {
+            Storage::disk('public')->delete($item->arquivo);
         }
 
-        // Remove o registro do banco de dados
         $item->delete();
 
-        return redirect()->route('galeria.index')->with('success', 'Item excluído com sucesso.');
+        return response()->json([
+            'message' => 'Imagem excluída com sucesso!',
+            'redirect_url' => route('galeria.index')
+        ], 200);
     }
 
 }

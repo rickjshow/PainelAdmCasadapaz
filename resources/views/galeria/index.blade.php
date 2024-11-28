@@ -84,35 +84,67 @@
                         <button type="submit" class="btn btn-primary ml-4" style="height: 40px; margin-top: 30px;">Filtrar</button>
                     </form>
                 </div>
-
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="galeria" role="tabpanel" aria-labelledby="galeria-tab">
-                <div class="row">
-                    @if(isset($galeria) && $galeria->isNotEmpty())
-                    @foreach($galeria as $item)
-                        <div class="col-md-3 mb-4">
-                            <div class="card" style="height: 300px; width: 100%;">
-                                <div class="card-img-top" style="height: 200px; overflow: hidden;">
-                                    <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
-                                </div>
-                                <div class="card-body text-center">
-                                    <form action="{{ route('galeria.destroy', $item->id) }}" method="POST" onsubmit="return confirmDelete(event)">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="galeria" role="tabpanel" aria-labelledby="galeria-tab">
+                    <div class="row">
+                        @if(isset($galeria) && $galeria->isNotEmpty())
+                            @foreach($galeria as $item)
+                                <div class="col-md-3 mb-4 mt-4">
+                                    <div class="card" style="border: none; height: 350px;">
+                                        <div class="card-img-top" style="height: 100%; overflow: hidden; display: flex; align-items: center;">
+                                            @if($item->tipo === 'foto')
+                                                <!-- Exibir a imagem para fotos -->
+                                                <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
+                                            @elseif($item->tipo === 'video')
+                                                @php
+                                                    $videoUrl = asset('videos_galeria/' . $item->arquivo);
+                                                @endphp
+                                                <video class="img-fluid w-100 h-100" style="object-fit: cover; cursor: pointer;"
+                                                    onclick="openVideoModal('{{ $videoUrl }}')">
+                                                    <source src="{{ $videoUrl }}" type="video/mp4">
+                                                    Seu navegador não suporta a reprodução de vídeos.
+                                                </video>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm w-100" onclick="confirmDelete('{{ $item->id }}')">
                                             <i class="fa fa-trash"></i> Excluir
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                        </div>
-                    @endforeach
-                    @else
-                        <p class="text-center mt-4">Nenhuma foto ou vídeo encontrado</p>
-                    @endif
+                            @endforeach
+                        @else
+                            <p class="text-center mt-4">Nenhuma foto ou vídeo encontrado</p>
+                        @endif
+                    </div>
+                </div>
+
+
+    <!-- Modal para reprodução do vídeo -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <video id="modalVideo" controls class="w-100">
+                        <source id="modalVideoSource" src="" type="video/mp4">
+                        Seu navegador não suporta a reprodução de vídeos.
+                    </video>
+>>>>>>> a6c0557ce095941aa226eafef905649432fe8304
                 </div>
             </div>
         </div>
+    </div>
+
+    <script>
+        function openVideoModal(videoUrl) {
+            const modalVideoSource = document.getElementById('modalVideoSource');
+            modalVideoSource.src = videoUrl;
+            const modalVideo = document.getElementById('modalVideo');
+            modalVideo.load(); // Carrega o novo vídeo
+            modalVideo.play(); // Tenta reproduzir o vídeo
+            new bootstrap.Modal(document.getElementById('videoModal')).show();
+        }
+    </script>
+
 
         <div class="modal fade" id="addArquivoModal" tabindex="-1" aria-labelledby="addArquivoModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -126,25 +158,16 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="evento_id">Evento</label>
-                                <select name="evento_id" class="form-control" required>
-                                    <option value="">Selecione um Evento</option>
+                                <select name="evento_id" class="form-control">
+                                    <option value="">Selecione um Evento(Opcional)</option>
                                     @foreach($eventos as $evento)
                                         <option value="{{ $evento->id }}">{{ $evento->titulo }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="tipo">Tipo</label>
-                                <select name="tipo" class="form-control" id="tipo" required>
-                                    <option value="">Selecione um tipo de arquivo</option>
-                                    <option value="foto">Foto</option>
-                                    <option value="video">Vídeo</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
                                 <label for="arquivo">Arquivo(s)</label>
                                 <input type="file" name="arquivo[]" class="form-control" accept="image/*,video/*" multiple required>
-                                <small>O tipo selecionado determina se apenas fotos ou vídeos serão enviados.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -155,77 +178,81 @@
             </div>
         </div>
     </div>
-
-            <div class="tab-pane fade" id="nova-aba" role="tabpanel" aria-labelledby="nova-aba-tab">
-                @include('galeria.evento')
-            </div>
+        <div class="tab-pane fade" id="nova-aba" role="tabpanel" aria-labelledby="nova-aba-tab">
+            @include('galeria.evento')
         </div>
-
-        <script>
-            function confirmDelete(event) {
-                event.preventDefault(); // Evita o envio imediato do formulário
-
-                Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Você não poderá reverter isso!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sim, excluir!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Envia o formulário após confirmação e exibe o alerta de sucesso
-                        event.target.submit();
-                        Swal.fire(
-                            'Excluído!',
-                            'A imagem foi excluída com sucesso.',
-                            'success'
-                        ).then(() => {
-                            location.reload(); // Recarrega a página para atualizar a lista de imagens
-                        });
-                    }
-                });
-            }
-
-
-            function confirmDeleteBanner(id, type) {
-                Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Você não poderá reverter isso!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sim, excluir!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`{{ url('/imagens') }}/${id}/remover/galeria`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ type: type })
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                Swal.fire(
-                                    'Excluído!',
-                                    'O banner foi excluído com sucesso.',
-                                    'success'
-                                ).then(() => location.reload());
-                            } else {
-                                Swal.fire(
-                                    'Erro!',
-                                    'Não foi possível excluir o banner.',
-                                    'error'
-                                );
-                            }
-                        });
-                    }
-                });
-            }
-        </script>
     </div>
+    </div>
+
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá reverter isso!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`/galeria/${id}/destroy`)
+                    .then(response => {
+                            Swal.fire(
+                                'Excluído!',
+                                'O item foi excluído com sucesso.',
+                                'success'
+                            ).then(() => {
+                                window.location.href = response.data.redirect_url
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Erro!',
+                                'Não foi possível excluir o item.',
+                                'error'
+                            );
+                        });
+                }
+            });
+        }
+
+        function confirmDeleteBanner(id, type) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "Você não poderá reverter isso!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`{{ url('/imagens') }}/${id}/remover/galeria`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type: type })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            Swal.fire(
+                                'Excluído!',
+                                'O banner foi excluído com sucesso.',
+                                'success'
+                            ).then(() => location.reload());
+                        } else {
+                            Swal.fire(
+                                'Erro!',
+                                'Não foi possível excluir o banner.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
 </x-app-layout>
