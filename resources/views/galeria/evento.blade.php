@@ -124,13 +124,64 @@
     </table>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function() {
             const form = this.closest('form');
-            showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                form.submit();
+            const actionUrl = form.getAttribute('action');
+
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá reverter isso!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviar requisição para exclusão
+                    fetch(actionUrl, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _method: 'DELETE'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire(
+                                'Excluído!',
+                                data.message,
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Erro!',
+                                data.message,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Erro!',
+                            'Ocorreu um erro ao tentar excluir o evento.',
+                            'error'
+                        );
+                    });
+                }
             });
         });
     });
 </script>
+
+

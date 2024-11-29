@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use App\Models\Galeria;
 use Illuminate\Http\Request;
 
 class EventoController extends Controller
@@ -89,8 +90,22 @@ class EventoController extends Controller
     {
         $evento = Evento::findOrFail($id);
 
+        // Verificar se há registros associados na tabela galeria
+        $galeriaCount = Galeria::where('evento_id', $id)->count();
+
+        if ($galeriaCount > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Este evento possui registros na galeria e não pode ser excluído!'
+            ], 400);
+        }
+
+        // Excluir o evento se não houver registros na galeria
         $evento->delete();
 
-        return redirect()->back()->with('success', 'Evento excluido com sucesso!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Evento excluído com sucesso!'
+        ], 200);
     }
 }

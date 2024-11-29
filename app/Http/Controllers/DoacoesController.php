@@ -50,7 +50,7 @@ class DoacoesController extends Controller
 
 
     // Atualiza uma doação existente
-    public function update(Request $request, $id)
+    /*public function update(Request $request, $id)
     {
         // Validação dos dados recebidos
         $request->validate([
@@ -69,10 +69,7 @@ class DoacoesController extends Controller
         // Redireciona com uma mensagem de sucesso
         return redirect()->route('doacao.index')->with('success', 'Doação atualizada com sucesso!');
     }
-
-    /**
-     * Display the specified resource.
-     */
+    */
     public function show(string $id)
     {
         //

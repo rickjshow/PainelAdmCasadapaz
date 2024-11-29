@@ -63,12 +63,7 @@
             }
         </script>
 
-            <form action="{{ isset($content) ? route('doacao.update', $content->id) : route('doacao.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @if(isset($content))
-                    @method('PATCH')
-                @endif
-
+            <form enctype="multipart/form-data">
                 <div class="row mb-4 mt-4">
                     <div class="col-12 mb-3">
                         <div class="card shadow-md rounded-lg p-4">
@@ -111,10 +106,6 @@
                             <input type="text" name="pix" class="form-control" value="{{ isset($content) ? $content->pix : '' }}">
                         </div>
                     </div>
-                </div>
-
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-success">Salvar</button>
                 </div>
             </form>
         </div>
