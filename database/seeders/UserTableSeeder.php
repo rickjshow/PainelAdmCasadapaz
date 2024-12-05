@@ -18,7 +18,6 @@ class UserTableSeeder extends Seeder
             'name' => 'admin',
             'email' => 'casadapazassociacao@gmail.com',
             'type' => 'admin',
-            'situation' => 'ativo',
             'password' => Hash::make('admin@123'),
             'remember_token' => Str::random(10),
         ]);

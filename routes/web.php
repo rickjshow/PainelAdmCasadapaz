@@ -1,17 +1,47 @@
 <?php
 
+use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Http\Controllers\NossaEquipeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\PasswordChangeController;
+
+Route::get('/', function() {
+    return redirect('/login');
+})->name('root');
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/', function () {
+    Route::get('/dashboard', function () {
         return view('dashboard');
-    })->name('dashboard');
+    })->middleware(['auth'])->name('dashboard');
 });
+
+Route::middleware(['guest'])->group(function () {
+    // Rota para exibir a página de login
+    Route::get('/login', [CustomAuthenticatedSessionController::class, 'create'])->name('login');
+
+    // Rota para processar o login
+    Route::post('/login', [CustomAuthenticatedSessionController::class, 'store']);
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Rota para logout
+    Route::post('/logout', [CustomAuthenticatedSessionController::class, 'destroy'])->name('logout');
+});
+
+    // Exibir o formulário de alteração de senha
+Route::get('/change-password', function () {
+    return view('auth.change-password'); // Certifique-se de que a view existe
+})->name('password.change.view');
+
+    // Processar a alteração de senha
+Route::post('/change-password', [PasswordChangeController::class, 'update'])
+    ->name('password.change');
+
+
 
 require base_path('routes/sobre_nos.php');
 require base_path('routes/bazar.php');

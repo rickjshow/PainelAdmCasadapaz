@@ -93,6 +93,14 @@
                         Solicitações
                     </a>
                 </li>
+                @if($user->type === 'admin')
+                    <li class="border-b border-gray-700">
+                        <a href="{{ route('users.index') }}" class="block p-4 flex items-center cursor-pointer">
+                        <i class="fas fa-users mr-2"></i>
+                            Usuários
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
 

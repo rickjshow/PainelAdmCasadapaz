@@ -33,7 +33,7 @@
                             <td>{{ $user->email }}</td>
                             <td class="text-center">{{ ucfirst($user->type) }}</td>
                             <td class="text-center">
-                                @if($user->situation)
+                                @if($user->is_active)
                                     <span class="badge bg-success">Ativo</span>
                                 @else
                                     <span class="badge bg-danger">Inativo</span>
@@ -46,10 +46,11 @@
                                     <button type="submit" class="btn btn-warning btn-sm">Alterar Tipo</button>
                                 </form>
 
-                                <!-- Alterar situação -->
                                 <form action="{{ route('users.toggle-situation', $user->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-info btn-sm">{{ $user->situation ? 'Desativar' : 'Ativar' }}</button>
+                                    <button type="submit" class="btn btn-info btn-sm">
+                                        {{ $user->is_active ? 'Desativar' : 'Ativar' }}
+                                    </button>
                                 </form>
 
                                 <button type="button" class="btn btn-primary open-modal-btn btn-sm" data-id="{{ $user->id }}" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $user->id }}">Editar</button>
@@ -94,7 +95,7 @@
                 <div class="modal-body">
                     <form id="createUserForm" action="{{ route('users.store') }}" method="POST">
                         @csrf
-                        
+
                         <div class="mb-3">
                             <label for="name" class="form-label">Nome</label>
                             <input type="text" name="name" id="name" class="form-control" required>
@@ -173,7 +174,7 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     const form = this.closest('form');
-                    
+
                     Swal.fire({
                         title: 'Tem certeza?',
                         text: 'Você não poderá reverter essa ação!',

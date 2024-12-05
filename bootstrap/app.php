@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(CheckAdmin::class);
     })
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(CheckAdmin::class);
+    })
+    ->withMiddleware(function (Middleware $middleware) {
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -15,6 +15,6 @@ class CheckAdmin
             return $next($request);
         }
 
-        return redirect()->route('home')->with('error', 'Acesso negado!');
+        return redirect()->route('dashboard')->with('error', 'Acesso negado!');
     }
 }
