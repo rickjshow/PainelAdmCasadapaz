@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bazars', function (Blueprint $table) {
-            $table->text('localizacao');
-            $table->text('doacoes');
-            $table->text('voluntariado');
-            $table->text('para_a_comunidade');
-            $table->text('para_a_casa_da_paz');
+        Schema::create('imagem_bazars', function (Blueprint $table) {
             $table->id();
+            $table->binary('imagem_bazar');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bazars');
+        Schema::dropIfExists('imagem_bazars');
     }
 };
