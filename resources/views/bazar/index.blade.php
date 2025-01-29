@@ -40,29 +40,44 @@
 
         <script>
             function removeBanner(id, type) {
-                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(`{{ url('/imagens') }}/${id}/remover/bazar`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: type })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
-                        } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
-                            throw new Error('Erro na resposta');
-                        }
-                    })
-                    .then(() => {
-                        location.reload();
-                    })
-                    .catch(error => console.error('Erro:', error));
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: 'Você não poderá reverter isso!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`{{ url('/imagens') }}/${id}/remover/bazar`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ type: type })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire(
+                                    'Excluído!',
+                                    'O banner foi excluído com sucesso.',
+                                    'success'
+                                ).then(() => location.reload());
+                            } else {
+                                Swal.fire(
+                                    'Erro!',
+                                    'Não foi possível excluir o banner.',
+                                    'error'
+                                );
+                            }
+                        })
+                        .catch(error => console.error('Erro:', error));
+                    }
                 });
             }
+
         </script>
 
         <h2 class="text-2xl font-bold mt-4 mb-4 text-center">Imagens</h2>
@@ -95,7 +110,7 @@
         </div>
 
         <div class="row mt-4">
-            @forelse($img as $item)
+            @forelse($items as $item)
                 <div class="col-md-3 mb-4">
                     <div class="card shadow">
                         <img src="{{ asset('storage/' . $item->arquivo) }}" class="card-img-top" alt="Imagem do bazar">

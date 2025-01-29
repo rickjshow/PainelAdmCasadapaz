@@ -73,11 +73,12 @@
                             <button type="button" class="btn btn-warning open-modal-btn mr-2" data-id="{{ $premio->id }}">
                                 Editar
                             </button>
-                                <form action="{{ route('premios.destroy', $premio->id) }}" method="POST" class="d-inline delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-danger delete-btn">Excluir</button>
-                                </form>
+                            <form action="{{ route('premios.destroy', $premio->id) }}" method="POST" class="delete-form d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger delete-btn">Excluir</button>
+                            </form>
+
                             </div>
                         </div>
                     </div>
@@ -168,7 +169,16 @@
         });
 
         function removeBanner(id, type) {
-                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá reverter isso!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir!'
+            }).then((result) => {
+                if (result.isConfirmed) {
                     fetch(`{{ url('/imagens') }}/${id}/remover/premios`, {
                         method: 'POST',
                         headers: {
@@ -179,51 +189,102 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
+                            Swal.fire(
+                                'Excluído!',
+                                'O banner foi excluído com sucesso.',
+                                'success'
+                            ).then(() => location.reload());
                         } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
-                            throw new Error('Erro na resposta');
+                            Swal.fire(
+                                'Erro!',
+                                'Não foi possível excluir o banner.',
+                                'error'
+                            );
                         }
-                    })
-                    .then(() => {
-                        location.reload();
                     })
                     .catch(error => console.error('Erro:', error));
-                });
-            }
+                }
+            });
+        }
 
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+
+        document.addEventListener('DOMContentLoaded', () => {
+        // Abre o modal de criação
+        document.getElementById('openModalCreate').addEventListener('click', function () {
+            const modalCreate = new bootstrap.Modal(document.getElementById('modalCreate'));
+            modalCreate.show();
+        });
+
+    });
+
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
                 const form = this.closest('.delete-form');
-                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            _method: 'DELETE',
+
+                // Exibe o alerta de confirmação
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: 'Você não poderá reverter isso!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!',
+                    cancelButtonText: 'Cancelar'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        // Envia a requisição DELETE usando fetch
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                _method: 'DELETE',
+                            }),
                         })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            showSuccessAlert('Excluído!', 'O membro foi excluído com sucesso.')
-                                .then(() => {
+                        .then(response => {
+                            if (response.ok) {
+                                // Alerta de sucesso e recarrega a página
+                                Swal.fire({
+                                    title: 'Excluído!',
+                                    text: 'O prêmio foi excluído com sucesso.',
+                                    icon: 'success',
+                                    confirmButtonColor: '#3085d6',
+                                }).then(() => {
                                     location.reload();
                                 });
-                        } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o membro.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                        showErrorAlert('Erro!', 'Ocorreu um erro ao excluir o membro.');
-                    });
+                            } else {
+                                // Alerta de erro
+                                Swal.fire({
+                                    title: 'Erro!',
+                                    text: 'Não foi possível excluir o prêmio.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#d33',
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            // Alerta no caso de falha inesperada
+                            Swal.fire({
+                                title: 'Erro!',
+                                text: 'Ocorreu um erro ao excluir o prêmio.',
+                                icon: 'error',
+                                confirmButtonColor: '#d33',
+                            });
+                        });
+                    }
                 });
             });
         });
-            
-    </script>
+    });
+</script>
+
 
 </x-app-layout>

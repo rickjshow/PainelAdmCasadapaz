@@ -14,8 +14,9 @@ class BazarController extends Controller
      */
     public function index()
     {
-        $img = ImagemBazar::all();
-        return view('bazar.index', compact('img'));
+        $items = ImagemBazar::all();
+        $img = BannerBazar::all()->first();
+        return view('bazar.index', compact('items', 'img'));
     }
 
     /**

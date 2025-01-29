@@ -160,38 +160,43 @@
 
         <script>
             function removeBanner(id, type) {
-                showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                    fetch(`{{ url('/imagens') }}/${id}/remover/como-ajudar`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: type })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return showSuccessAlert('Excluído!', 'O banner foi excluído com sucesso.');
-                        } else {
-                            showErrorAlert('Erro!', 'Não foi possível excluir o banner.');
-                            throw new Error('Erro na resposta');
-                        }
-                    })
-                    .then(() => {
-                        location.reload();
-                    })
-                    .catch(error => console.error('Error:', error));
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: 'Você não poderá reverter isso!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`{{ url('/imagens') }}/${id}/remover/como-ajudar`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ type: type })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire(
+                                    'Excluído!',
+                                    'O banner foi excluído com sucesso.',
+                                    'success'
+                                ).then(() => location.reload());
+                            } else {
+                                Swal.fire(
+                                    'Erro!',
+                                    'Não foi possível excluir o banner.',
+                                    'error'
+                                );
+                            }
+                        })
+                        .catch(error => console.error('Erro:', error));
+                    }
                 });
             }
-
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const form = this.closest('form');
-                    showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                        form.submit();
-                    });
-                });
-            });
         </script>
     </div>
 </x-app-layout>
