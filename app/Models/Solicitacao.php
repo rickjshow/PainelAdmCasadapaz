@@ -15,4 +15,9 @@ class Solicitacao extends Model
         'vaga',
         'status'
     ];
+
+    public function vaga()
+    {
+        return $this->belongsTo(Vaga::class, 'vaga'); // Relacionando a chave estrangeira 'vaga' com a tabela 'vagas'
+    }
 }

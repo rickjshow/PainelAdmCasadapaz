@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('email');
-            $table->string('vaga');
+            $table->unsignedBigInteger('vaga'); // Modificando para chave estrangeira
             $table->string('status');
             $table->text('mensagem_resposta')->nullable();
             $table->string('aprovacao')->nullable();
             $table->timestamps();
+
+            // Definindo a chave estrangeira
+            $table->foreign('vaga')->references('id')->on('vagas')->onDelete('cascade');
         });
     }
 
@@ -28,6 +31,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('solicitacaos', function (Blueprint $table) {
+            // Remover a chave estrangeira antes de apagar a tabela
+            $table->dropForeign(['vaga']);
+        });
+
         Schema::dropIfExists('solicitacaos');
     }
 };

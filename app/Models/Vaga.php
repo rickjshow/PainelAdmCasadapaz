@@ -13,4 +13,9 @@ class Vaga extends Model
         'vaga',
         'necessidade'
     ];
+
+    public function solicitacaos()
+    {
+        return $this->hasMany(Solicitacao::class, 'vaga'); // Relacionando a chave estrangeira 'vaga' na tabela 'solicitacaos'
+    }
 }
