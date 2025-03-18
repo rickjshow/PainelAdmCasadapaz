@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DoacaosTableSeeder::class);
         $this->call(SobrenosTableSeeder::class);
         $this->call(EmailTemplateTableSeeder::class);
-        $this->call(SolicitacaoTableSeed::class);
         $this->call(UserTableSeeder::class);
     }
 }

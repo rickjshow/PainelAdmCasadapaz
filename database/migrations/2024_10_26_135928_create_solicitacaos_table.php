@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('email');
             $table->unsignedBigInteger('vaga'); // Modificando para chave estrangeira
-            $table->string('status');
+            $table->string('status')->default('pendente');
             $table->text('mensagem_resposta')->nullable();
             $table->string('aprovacao')->nullable();
             $table->timestamps();
