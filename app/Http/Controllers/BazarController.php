@@ -14,10 +14,12 @@ class BazarController extends Controller
      */
     public function index()
     {
-        $items = ImagemBazar::all();
+        // Retorna um array associativo de 'id' => 'imagem_bazar'
+        $items = ImagemBazar::pluck('imagem_bazar', 'id');
         $img = BannerBazar::all()->first();
         return view('bazar.index', compact('items', 'img'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -84,15 +86,20 @@ class BazarController extends Controller
     }
 
     public function destroyImg(string $id)
-    {
-        $imagem = ImagemBazar::findOrFail($id);
+{
+    $imagem = ImagemBazar::findOrFail($id);
 
-        if (Storage::disk('public')->exists($imagem->imagem_bazar)) {
-            Storage::disk('public')->delete($imagem->imagem_bazar);
-        }
-
-        $imagem->delete();
-
-        return redirect()->back()->with('success', 'Imagem removida com sucesso!');
+    // Verifique se o arquivo realmente existe
+    if (Storage::disk('public')->exists($imagem->imagem_bazar)) {
+        // Remova o arquivo
+        Storage::disk('public')->delete($imagem->imagem_bazar);
     }
+
+    // Exclua o registro do banco de dados
+    $imagem->delete();
+
+    // Retorne uma resposta JSON com sucesso (200 OK)
+    return response()->json(['message' => 'Imagem removida com sucesso!'], 200);
+}
+
 }

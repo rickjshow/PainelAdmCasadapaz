@@ -2,9 +2,10 @@
     <div class="container-fluid mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Pagina Bazar</h2>
 
+        {{--
+
         <form action="{{ route('banners-bazar.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
             <div class="row mb-4">
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4" style="height: 250px;">
@@ -80,7 +81,8 @@
 
         </script>
 
-        <h2 class="text-2xl font-bold mt-4 mb-4 text-center">Imagens</h2>
+        --}}
+
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addArquivoModal">
             <i class="fas fa-plus"></i> Adicionar Imagem
@@ -110,18 +112,16 @@
         </div>
 
         <div class="row mt-4">
-            @forelse($items as $item)
+            @forelse($items as $id => $imagem)
                 <div class="col-md-3 mb-4">
                     <div class="card shadow">
-                        <img src="{{ asset('storage/' . $item->arquivo) }}" class="card-img-top" alt="Imagem do bazar">
+                        <!-- Acessando diretamente o caminho da imagem -->
+                        <img src="{{ asset('storage/' . $imagem) }}" class="card-img-top" alt="Imagem do bazar">
                         <div class="card-body">
-                            <form action="{{ route('bazar.destroyImg', $item->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta imagem?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm w-100">
-                                    <i class="fa fa-trash"></i> Excluir
-                                </button>
-                            </form>
+                            <!-- Passando o ID da imagem para a função de confirmação -->
+                            <button type="button" class="btn btn-danger btn-sm w-100" onclick="confirmDeleteBanner('{{ $id }}')">
+                                <i class="fa fa-trash"></i> Excluir
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -130,45 +130,58 @@
             @endforelse
         </div>
 
-    <script>
-        function confirmDeleteBanner(id, type) {
-            Swal.fire({
-                title: 'Tem certeza?',
-                text: "Você não poderá reverter isso!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sim, excluir!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`{{ url('/imagens') }}/${id}/remover/galeria`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: type })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            Swal.fire(
-                                'Excluído!',
-                                'O banner foi excluído com sucesso.',
-                                'success'
-                            ).then(() => location.reload());
-                        } else {
-                            Swal.fire(
-                                'Erro!',
-                                'Não foi possível excluir o banner.',
-                                'error'
-                            );
-                        }
-                    });
-                }
-            });
-        }
-    </script>
+
+
+        <script>
+    function confirmDeleteBanner(id) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, excluir!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`{{ url('/bazar/destroy') }}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => response.json())  // Aguarde a resposta como JSON
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire(
+                            'Excluído!',
+                            data.message,  // Use a mensagem retornada pelo backend
+                            'success'
+                        ).then(() => location.reload());
+                    } else {
+                        Swal.fire(
+                            'Erro!',
+                            'Não foi possível excluir a imagem.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    Swal.fire(
+                        'Erro!',
+                        'Houve um problema ao excluir a imagem.',
+                        'error'
+                    );
+                    console.error(error);  // Log de erro para facilitar depuração
+                });
+
+            }
+        });
+    }
+</script>
+
+
 
     </div>
 </x-app-layout>

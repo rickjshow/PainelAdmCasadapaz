@@ -1,6 +1,7 @@
 <x-app-layout>
     <div class="container-fluid mt-4 p-4">
             <h2 class="text-2xl font-bold mb-4 text-center">Doações</h2>
+            {{--
                 <form action="{{ route('banners-doacoes.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-4">
@@ -77,6 +78,8 @@
             }
 
         </script>
+
+        --}}
 
             <form enctype="multipart/form-data">
                 <div class="row mb-4 mt-4">

@@ -2,6 +2,8 @@
     <div class="container-fluid mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Pagina de Premios</h2>
 
+        {{--
+
         <form action="{{ route('banners-premios.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -37,6 +39,8 @@
 
             <button type="submit" class="btn btn-success mt-2 mb-5">Salvar</button>
         </form>
+
+        --}}
 
         <form action="{{ isset($texto) ? route('texto.update', $texto->id) : route('texto.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
