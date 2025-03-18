@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comoajudars', function (Blueprint $table) {
+        Schema::create('como_ajudars', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
             $table->text('descricao');
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comoajudars');
+        //
     }
 };

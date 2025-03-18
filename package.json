@@ -17,6 +17,6 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.1.5",
-        "sweetalert2": "^11.14.5"
+        "sweetalert2": "^11.17.2"
     }
 }
