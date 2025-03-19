@@ -40,8 +40,6 @@
             <button type="submit" class="btn btn-success mt-2 mb-5">Salvar</button>
         </form>
 
-        --}}
-
         <form action="{{ isset($texto) ? route('texto.update', $texto->id) : route('texto.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($texto))
@@ -60,8 +58,9 @@
                 </div>
         </form>
 
+        --}}
+
         <div class="row mt-5">
-            <h3 class="text-2xl font-bold mb-4 text-center">Prêmios da Casa da Paz</h3>
             <div class="d-flex mb-4">
                 <button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#addPremioModal">
                     Adicionar Novo Prêmio
@@ -145,6 +144,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="imagem" class="form-label">Imagem do Prêmio</label>
+                                <h5 class="mb-2 mt-2">Tamanho recomendado da imagem: 325x272</h5>
                                 <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*" required>
                             </div>
                         </div>
