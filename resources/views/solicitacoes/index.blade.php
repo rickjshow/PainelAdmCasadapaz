@@ -35,8 +35,10 @@
                             <tr>
                                 <td class="text-center">{{ $solicitacao->nome }}</td>
                                 <td class="text-center">{{ $solicitacao->email }}</td>
-                                <td class="text-center">{{ $solicitacao->vaga }}</td>
-                                <td class="text-center">{{ $solicitacao->created_at ? $solicitacao->created_at->format('d/m/Y H:i') : 'Data não disponível' }}</td>
+                                <td class="text-center">{{ $solicitacao->nome_vaga }}</td>
+                                <td class="text-center">{{ $solicitacao->created_at ? \Carbon\Carbon::parse($solicitacao->created_at)->format('d/m/Y H:i') : 'Data não disponível' }}
+
+                                </td>
                                 <td class="text-center">
                                     <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#responderModal{{ $solicitacao->id }}">
                                         <i class="fas fa-reply"></i> Responder
@@ -105,8 +107,11 @@
                             <tr>
                                 <td class="text-center">{{ $solicitacao->nome }}</td>
                                 <td class="text-center">{{ $solicitacao->email }}</td>
-                                <td class="text-center">{{ $solicitacao->vaga }}</td>
-                                <td class="text-center">{{ $solicitacao->updated_at ? $solicitacao->updated_at->format('d/m/Y H:i') : 'Data não disponível' }}</td>
+                                <td class="text-center">{{ $solicitacao->nome_vaga }}</td>
+                                <td class="text-center">{{ $solicitacao->updated_at ? \Carbon\Carbon::parse($solicitacao->updated_at)->format('d/m/Y H:i') : 'Data não disponível' }}
+
+
+                                </td>
                                 <td class="text-center">{{ $solicitacao->aprovacao }}</td>
                                 <td class="text-center">
                                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#verRespostaModal{{ $solicitacao->id }}">
@@ -164,10 +169,10 @@
                         @foreach($textosEmail as $template)
                             <div class="mb-3">
                                 <label for="template_{{ $template->id }}" class="form-label">{{ $template->key }}</label>
-                                <textarea 
-                                    class="form-control" 
-                                    id="template_{{ $template->id }}" 
-                                    name="templates[{{ $template->id }}][conteudo]" 
+                                <textarea
+                                    class="form-control"
+                                    id="template_{{ $template->id }}"
+                                    name="templates[{{ $template->id }}][conteudo]"
                                     rows="4">{{ $template->conteudo }}</textarea>
                             </div>
                         @endforeach

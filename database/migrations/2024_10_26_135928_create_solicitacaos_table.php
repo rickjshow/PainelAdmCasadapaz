@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Definindo a chave estrangeira
-            $table->foreign('vaga')->references('id')->on('vagas')->onDelete('cascade');
+            $table->foreign('vaga')->references('id')->on('vagas')->onDelete('restrict');
         });
     }
 

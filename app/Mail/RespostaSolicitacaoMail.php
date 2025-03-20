@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\Contato;
 use App\Models\EmailTemplate;
 use App\Models\TemplateEmail;
+use App\Models\Vaga;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -26,21 +27,25 @@ class RespostaSolicitacaoMail extends Mailable
     }
 
     public function build()
-{
-    $textosEmail = TemplateEmail::whereIn('key', ['ola', 'agradecimento', 'aprovacao', 'recusa', 'despedida'])
-                                ->pluck('conteudo', 'key');
+    {
+        $textosEmail = TemplateEmail::whereIn('key', ['ola', 'agradecimento', 'aprovacao', 'recusa', 'despedida'])
+                                    ->pluck('conteudo', 'key');
 
-    $endereco = Contato::all()->first();
+        $endereco = Contato::first();
 
-    return $this->view('emails.resposta_solicitacao')
-                ->with([
-                    'solicitacao' => $this->solicitacao,
-                    'mensagem' => $this->mensagem,
-                    'textosEmail' => $textosEmail,
-                    'endereco' => $endereco
-                ])
-                ->subject('Resposta à Sua Solicitação');
-}
+        $vaga = \App\Models\Vaga::where('id', $this->solicitacao->vaga)->first();
+
+        return $this->view('emails.resposta_solicitacao')
+                    ->with([
+                        'solicitacao' => $this->solicitacao,
+                        'mensagem' => $this->mensagem,
+                        'textosEmail' => $textosEmail,
+                        'endereco' => $endereco,
+                        'vagaNome' => $vaga,
+                    ])
+                    ->subject('Resposta à Sua Solicitação');
+    }
+
 
 
     /**

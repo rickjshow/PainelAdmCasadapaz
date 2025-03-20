@@ -6,6 +6,7 @@ use App\Models\BannerComoAjudar;
 use App\Models\Comoajudar;
 use App\Models\Vaga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;  // Importando DB para Query Builder
 use Illuminate\Support\Facades\Log;
 
 class ComoAjudarController extends Controller
@@ -88,10 +89,33 @@ class ComoAjudarController extends Controller
      */
     public function destroy(string $id)
     {
+
+        $existeSolicitacao = DB::table('solicitacoes')->where('vaga', $id)->exists();
+
+        if ($existeSolicitacao) {
+
+            return response()->json([
+                'error_code' => 1001,
+                'message' => 'Não é possível excluir esta vaga, pois há solicitações vinculadas.'
+            ], 400);
+        }
+
+        // Busca e exclui a vaga
+        $item = Comoajudar::findOrFail($id);
+        $item->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item deletado com sucesso!'
+        ]);
+    }
+
+    public function destroyItem(string $id)
+    {
         $item = Comoajudar::findOrFail($id);
 
         $item->delete();
 
-        return redirect()->route('como-ajudar.index')->with('success', 'Item deletado com sucesso!');
+        return redirect()->route('como-ajudar.index')->with('success', 'Item excluido com sucesso!');
     }
 }

@@ -99,8 +99,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="imagem_bazar" class="form-label">Escolha uma imagem</label>
-                                <input type="file" name="imagem_bazar" class="form-control" accept="image/*" required>
+                                <label for="imagem_bazar" class="form-label">Escolha as imagens</label>
+                                <input type="file" name="imagem_bazar[]" class="form-control" accept="image/*" required multiple>
                             </div>
                         </div>
                         <div class="modal-footer">

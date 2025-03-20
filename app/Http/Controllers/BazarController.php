@@ -32,18 +32,24 @@ class BazarController extends Controller
     public function addImg(Request $request)
     {
         $request->validate([
-            'imagem_bazar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagem_bazar' => 'required|array', // Validar que é um array
+            'imagem_bazar.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validar cada imagem individualmente
         ]);
 
         if ($request->hasFile('imagem_bazar')) {
-            $filePath = $request->file('imagem_bazar')->store('bazar', 'public');
-            ImagemBazar::create(['imagem_bazar' => $filePath]);
+            foreach ($request->file('imagem_bazar') as $imagem) {
+                // Para cada imagem, armazene-a no diretório 'bazar'
+                $filePath = $imagem->store('bazar', 'public');
+                // Crie um registro para cada imagem no banco de dados
+                ImagemBazar::create(['imagem_bazar' => $filePath]);
+            }
 
-            return redirect()->back()->with('success', 'Imagem adicionada com sucesso!');
+            return redirect()->back()->with('success', 'Imagens adicionadas com sucesso!');
         }
 
-        return redirect()->back()->withErrors('Erro ao enviar a imagem.');
+        return redirect()->back()->withErrors('Erro ao enviar as imagens.');
     }
+
 
     /**
      * Store a newly created resource in storage.

@@ -10,7 +10,7 @@ Route::get('/como-ajudar', [ComoAjudarController::class, 'index'])->name('como-a
 Route::post('/como-ajudar/store', [ComoAjudarController::class, 'store'])->name('como-ajudar.store');
 Route::get('/como-ajudar/{id}/edit', [ComoAjudarController::class, 'edit'])->name('como-ajudar.edit');
 Route::put('/como-ajudar/{id}/update', [ComoAjudarController::class, 'update'])->name('como-ajudar.update');
-Route::delete('/como-ajudar/{id}/destroy', [ComoAjudarController::class, 'destroy'])->name('como-ajudar.destroy');
+Route::delete('/como-ajudar/{id}/destroy', [ComoAjudarController::class, 'destroyItem'])->name('como-ajudar.destroy');
 
 Route::post('/como-ajudar/banners/store', [BannersComoAjudarController::class, 'store'])->name('banners-comoajudar.store');
 Route::post('/imagens/{id}/remover/como-ajudar', [BannersComoAjudarController::class, 'remover'])->name('banners-comoajudar.remover');

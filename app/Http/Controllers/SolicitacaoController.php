@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\RespostaSolicitacaoMail;
 use App\Models\Solicitacao;
 use App\Models\TemplateEmail;
+use App\Models\Vaga;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -14,8 +16,18 @@ class SolicitacaoController extends Controller
     public function index()
     {
         $textosEmail = TemplateEmail::all();
-        $novasSolicitacoes = Solicitacao::where('status', 'pendente')->get();
-        $solicitacoesRespondidas = Solicitacao::where('status', 'respondida')->get();
+        $novasSolicitacoes = DB::table('solicitacaos')
+            ->join('vagas', 'solicitacaos.vaga', '=', 'vagas.id')
+            ->where('solicitacaos.status', 'pendente')
+            ->select('solicitacaos.*', 'vagas.vaga as nome_vaga')
+            ->get();
+
+        $solicitacoesRespondidas = DB::table('solicitacaos')
+            ->join('vagas', 'solicitacaos.vaga', '=', 'vagas.id')
+            ->where('solicitacaos.status', 'respondida')
+            ->select('solicitacaos.*', 'vagas.vaga as nome_vaga')
+            ->get();
+
 
         return view('solicitacoes.index', compact('novasSolicitacoes', 'solicitacoesRespondidas', 'textosEmail'));
     }

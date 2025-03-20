@@ -103,12 +103,10 @@
                                             Editar
                                         </button>
 
-                                        <form class="delete-form" action="{{ route('como-ajudar.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('como-ajudar.destroy', $item->id) }}" method="POST" class="delete-form d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger delete-btn">
-                                                <i class="fas fa-trash-alt"></i> Excluir
-                                            </button>
+                                            <button type="button" class="btn btn-danger delete-btn">Excluir</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -198,5 +196,71 @@
                 });
             }
         </script>
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const form = this.closest('.delete-form');
+
+                // Exibe o alerta de confirmação
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: 'Você não poderá reverter isso!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!',
+                    cancelButtonText: 'Cancelar'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        // Envia a requisição DELETE usando fetch
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                _method: 'DELETE',
+                            }),
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Alerta de sucesso e recarrega a página
+                                Swal.fire({
+                                    title: 'Excluído!',
+                                    text: 'A Exclusão foi feita com sucesso.',
+                                    icon: 'success',
+                                    confirmButtonColor: '#3085d6',
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                // Alerta de erro
+                                Swal.fire({
+                                    title: 'Erro!',
+                                    text: 'Não é possível excluir vagas que estejam vinculadas a solicitações de candidatura.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#d33',
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            // Alerta no caso de falha inesperada
+                            Swal.fire({
+                                title: 'Erro!',
+                                text: 'Ocorreu um erro ao realizar a exclusão.',
+                                icon: 'error',
+                                confirmButtonColor: '#d33',
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
     </div>
 </x-app-layout>

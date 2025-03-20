@@ -63,12 +63,10 @@
                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editVagaModal{{ $vaga->id }}">
                             Editar
                         </button>
-                        <form class="delete-form" action="{{ route('vagas.destroy', $vaga->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-danger delete-btn">
-                                <i class="fas fa-trash-alt"></i> Excluir
-                            </button>
+                        <form action="{{ route('vagas.destroy', $vaga->id) }}" method="POST" class="delete-form d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger delete-btn">Excluir</button>
                         </form>
                     </td>
                 </tr>
@@ -114,13 +112,3 @@
     </table>
 </div>
 
-<script>
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const form = this.closest('form');
-            showConfirmAlert('Tem certeza?', 'Você não poderá reverter isso!', function() {
-                form.submit();
-            });
-        });
-    });
-</script>
