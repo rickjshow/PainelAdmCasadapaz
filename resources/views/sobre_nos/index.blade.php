@@ -16,7 +16,7 @@
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-md rounded-lg p-4" style="height: 250px;">
                         <h5 class="font-semibold text-lg">Banner Desktop</h5>
-                        <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1920x170 </h4>
+                        <h4 class="mb-2 mt-2">Tamanho recomendado da imagem: 1920x472 </h4>
                         @if(isset($img) && $img->banner_principal)
                             <img src="{{ asset('storage/' . $img->banner_principal) }}" class="img-fluid mb-2" style="max-width: 400px; max-height: 50px;" />
                             <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeBanner('{{ $img->id }}', 'banner_principal')">
@@ -164,7 +164,7 @@
             <div class="col-md-3 text-center mb-4">
                 <div class="card mb-4 shadow-sm border-light">
                     <div style="overflow: hidden;">
-                        <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="{{ route('exibir.imagem', ['id' => $equipe->id]) }}" alt="Foto da equipe" style="width: 100%; height: 400px; object-fit: cover; object-position: center;">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-primary">{{ $equipe->nome }}</h5>
