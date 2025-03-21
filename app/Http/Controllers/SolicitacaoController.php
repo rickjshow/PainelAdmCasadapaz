@@ -9,6 +9,7 @@ use App\Models\Vaga;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class SolicitacaoController extends Controller
 {

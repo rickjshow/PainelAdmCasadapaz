@@ -36,7 +36,7 @@
                                 <td class="text-center">{{ $solicitacao->nome }}</td>
                                 <td class="text-center">{{ $solicitacao->email }}</td>
                                 <td class="text-center">{{ $solicitacao->nome_vaga }}</td>
-                                <td class="text-center">{{ $solicitacao->created_at ? \Carbon\Carbon::parse($solicitacao->created_at)->format('d/m/Y H:i') : 'Data não disponível' }}
+                                <td class="text-center">{{ $solicitacao->updated_at ? \Carbon\Carbon::parse($solicitacao->updated_at)->format('d/m/Y H:i') : 'Data não disponível' }}
 
                                 </td>
                                 <td class="text-center">
