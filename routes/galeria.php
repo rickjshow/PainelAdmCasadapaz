@@ -16,3 +16,6 @@ Route::post('/imagens/{id}/remover/galeria', [BannersGaleriaController::class, '
 Route::post('/galeria/eventos/store', [EventoController::class, 'store'])->name('eventos.store');
 Route::put('galeria/eventos/{id}/edit', [EventoController::class, 'update'])->name('eventos.update');
 Route::delete('galeria/eventos/{id}/destroy', [EventoController::class, 'destroy'])->name('eventos.destroy');
+
+Route::delete('/galeria/excluir-selecionadas', [GaleriaController::class, 'destroyMultiple'])->name('galeria.excluir-selecionados');
+

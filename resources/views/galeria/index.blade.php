@@ -1,4 +1,9 @@
 <x-app-layout>
+    @if(session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
     <div class="container-fluid mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Página Galeria</h2>
 
@@ -84,24 +89,39 @@
                     </form>
                 </div>
 
-                <div class="row">
-                    @if(isset($galeria) && $galeria->isNotEmpty())
-                        @foreach($galeria as $item)
-                            <div class="col-md-3 mb-4 mt-4">
-                                <div class="card" style="border: none; height: 350px;">
-                                    <div class="card-img-top" style="height: 100%; overflow: hidden; display: flex; align-items: center;">
-                                        <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
+                <form id="form-excluir-selecionados" method="POST" action="{{ route('galeria.excluir-selecionados') }}">
+                    @csrf
+                    @method('DELETE')
+
+                    <!-- Botão acima das imagens -->
+                    <div class="mb-3 mt-2">
+                        <button type="button" class="btn btn-danger" onclick="confirmarExclusaoSelecionados()">
+                            <i class="fa fa-trash"></i> Excluir Selecionados
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        @if(isset($galeria) && $galeria->isNotEmpty())
+                            @foreach($galeria as $item)
+                                <div class="col-md-3 mb-4 mt-4">
+                                    <div class="card" style="border: none; height: 350px;">
+                                        <div class="form-check position-absolute m-2">
+                                            <input type="checkbox" class="form-check-input imagem-checkbox" name="imagens[]" value="{{ $item->id }}">
+                                        </div>
+                                        <div class="card-img-top" style="height: 100%; overflow: hidden; display: flex; align-items: center;">
+                                            <img src="{{ asset('storage/' . $item->arquivo) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm w-100" onclick="confirmDelete('{{ $item->id }}')">
+                                            <i class="fa fa-trash"></i> Excluir
+                                        </button>
                                     </div>
-                                    <button type="button" class="btn btn-danger btn-sm w-100" onclick="confirmDelete('{{ $item->id }}')">
-                                        <i class="fa fa-trash"></i> Excluir
-                                    </button>
                                 </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-center mt-4">Nenhuma imagem encontrada</p>
-                    @endif
-                </div>
+                            @endforeach
+                        @else
+                            <p class="text-center mt-4">Nenhuma imagem encontrada</p>
+                        @endif
+                    </div>
+                </form>
             </div>
 
             <!-- Aba Eventos -->
@@ -182,6 +202,53 @@
                 }
             });
         }
+
+        const checkboxes = document.querySelectorAll('.imagem-checkbox');
+        const btnExcluir = document.getElementById('btnExcluirSelecionadas');
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const algumaMarcada = [...checkboxes].some(c => c.checked);
+                btnExcluir.disabled = !algumaMarcada;
+            });
+        });
+
+        function confirmarExclusaoSelecionados() {
+        const checkboxes = document.querySelectorAll('.imagem-checkbox:checked');
+        if (checkboxes.length === 0) {
+            Swal.fire('Atenção', 'Selecione ao menos uma imagem para excluir.', 'warning');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "As imagens selecionadas serão excluídas permanentemente!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-excluir-selecionados').submit();
+            }
+        });
+    }
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Essa imagem será excluída permanentemente!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redireciona ou envia requisição para exclusão individual
+                window.location.href = `/galeria/${id}/excluir`; // Ajuste essa rota se necessário
+            }
+        });
+    }
     </script>
 
 </x-app-layout>

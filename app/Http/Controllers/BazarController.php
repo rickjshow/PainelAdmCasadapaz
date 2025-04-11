@@ -92,20 +92,41 @@ class BazarController extends Controller
     }
 
     public function destroyImg(string $id)
-{
-    $imagem = ImagemBazar::findOrFail($id);
+    {
+        $imagem = ImagemBazar::findOrFail($id);
 
-    // Verifique se o arquivo realmente existe
-    if (Storage::disk('public')->exists($imagem->imagem_bazar)) {
-        // Remova o arquivo
-        Storage::disk('public')->delete($imagem->imagem_bazar);
+        // Verifique se o arquivo realmente existe
+        if (Storage::disk('public')->exists($imagem->imagem_bazar)) {
+            // Remova o arquivo
+            Storage::disk('public')->delete($imagem->imagem_bazar);
+        }
+
+        // Exclua o registro do banco de dados
+        $imagem->delete();
+
+        // Retorne uma resposta JSON com sucesso (200 OK)
+        return response()->json(['message' => 'Imagem removida com sucesso!'], 200);
     }
 
-    // Exclua o registro do banco de dados
-    $imagem->delete();
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('imagens', []);
 
-    // Retorne uma resposta JSON com sucesso (200 OK)
-    return response()->json(['message' => 'Imagem removida com sucesso!'], 200);
-}
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Nenhuma imagem selecionada para exclusão.');
+        }
+
+        foreach ($ids as $id) {
+            $item = ImagemBazar::find($id);
+            if ($item) {
+                if ($item->arquivo && Storage::disk('public')->exists($item->arquivo)) {
+                    Storage::disk('public')->delete($item->arquivo);
+                }
+                $item->delete();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Imagens do bazar excluídas com sucesso.');
+    }
 
 }

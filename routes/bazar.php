@@ -10,3 +10,6 @@ Route::post('/imagens/{id}/remover/bazar', [BannersBazarController::class, 'remo
 Route::get('/bazar', [BazarController::class, 'index'])->name('bazar.index');
 Route::post('/bazar/add', [BazarController::class, 'addImg'])->name('bazar.addImg');
 Route::delete('/bazar/destroy/{id}', [BazarController::class, 'destroyImg'])->name('bazar.destroyImg');
+
+Route::delete('/bazar/excluir-selecionadas', [BazarController::class, 'destroyMultiple'])->name('bazar.excluir-selecionados');
+

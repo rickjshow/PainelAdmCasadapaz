@@ -104,4 +104,27 @@ class GaleriaController extends Controller
             'redirect_url' => route('galeria.index')
         ], 200);
     }
+
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('imagens');
+
+        if (!$ids || !is_array($ids)) {
+            return redirect()->back()->with('error', 'Nenhuma imagem selecionada.');
+        }
+
+        foreach ($ids as $id) {
+            $item = Galeria::find($id);
+            if ($item && $item->arquivo && Storage::disk('public')->exists($item->arquivo)) {
+                Storage::disk('public')->delete($item->arquivo);
+            }
+
+            if ($item) {
+                $item->delete();
+            }
+        }
+
+        return redirect()->route('galeria.index')->with('success', 'Imagens excluídas com sucesso!');
+    }
+
 }

@@ -1,4 +1,9 @@
 <x-app-layout>
+    @if(session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="container-fluid mt-4 p-4">
         <h2 class="text-2xl font-bold mb-4 text-center">Página Como Ajudar</h2>
 
