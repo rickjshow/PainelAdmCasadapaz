@@ -152,6 +152,16 @@
             </div>
         </form>
 
+
+        <div class="bg-secondary text-white rounded p-4 mx-auto my-5 text-center shadow-lg" style="max-width: 600px;">
+            <div>
+                <h2 class="fs-2 fw-bold mb-4">Cadastrar Convenios e Parceiros</h2>
+                <a href="{{ route('convenios.index') }}" class="btn btn-primary btn-lg px-4 py-2 rounded-pill">
+                    Clique Aqui
+                </a>
+            </div>
+        </div>
+    
         <h2 class="text-2xl font-bold mb-4 text-center">Equipe</h2>
 
         <button type="button" class="btn btn-primary mb-4" id="openModalCreate">
@@ -229,21 +239,20 @@
 </div>
 
 <!-- Script para Abertura do Modal -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var openModalBtns = document.querySelectorAll('.open-modal-btn');
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var openModalBtns = document.querySelectorAll('.open-modal-btn');
 
-        openModalBtns.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var id = this.getAttribute('data-id');
-                var modal = document.getElementById('modalEdit' + id);
-                var modalInstance = new bootstrap.Modal(modal);
-                modalInstance.show();
+                openModalBtns.forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var id = this.getAttribute('data-id');
+                        var modal = document.getElementById('modalEdit' + id);
+                        var modalInstance = new bootstrap.Modal(modal);
+                        modalInstance.show();
+                    });
+                });
             });
-        });
-    });
-</script>
-
+        </script>
 
         <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
             <div class="modal-dialog">

@@ -52,4 +52,5 @@ require base_path('routes/galeria.php');
 require base_path('routes/premios.php');
 require base_path('routes/solicitacoes.php');
 require base_path('routes/users.php');
+require base_path('routes/convenios.php');
 Route::get('/imagem/{id}', [NossaEquipeController::class, 'exibirImagem'])->name('exibir.imagem');
