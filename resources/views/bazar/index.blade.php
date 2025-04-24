@@ -41,27 +41,30 @@
 
             <div class="row">
                 @forelse($items as $id => $imagem)
-                    <div class="col-md-3 mb-4">
-                        <div class="card shadow position-relative">
-
+                    <div class="col-md-3 mb-4 mt-4">
+                        <div class="card shadow position-relative" style="border: none; height: 350px;">
+                            
                             <!-- Checkbox -->
                             <div class="form-check position-absolute m-2">
                                 <input type="checkbox" class="form-check-input imagem-checkbox" name="imagens[]" value="{{ $id }}">
                             </div>
-
-                            <img src="{{ asset('storage/' . $imagem) }}" class="card-img-top" alt="Imagem do bazar">
-
-                            <div class="card-body">
-                                <button type="button" class="btn btn-danger btn-sm w-100" onclick="confirmDeleteBanner('{{ $id }}')">
-                                    <i class="fa fa-trash"></i> Excluir
-                                </button>
+            
+                            <!-- Imagem com altura fixa e corte proporcional -->
+                            <div class="card-img-top" style="height: 100%; overflow: hidden; display: flex; align-items: center;">
+                                <img src="{{ asset('storage/' . $imagem) }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
                             </div>
+            
+                            <!-- Botão -->
+                            <button type="button" class="btn btn-danger btn-sm w-100" onclick="confirmDeleteBanner('{{ $id }}')">
+                                <i class="fa fa-trash"></i> Excluir
+                            </button>
                         </div>
                     </div>
                 @empty
                     <p class="text-center mt-4">Nenhuma imagem encontrada.</p>
                 @endforelse
             </div>
+            
         </form>
 
         <script>
