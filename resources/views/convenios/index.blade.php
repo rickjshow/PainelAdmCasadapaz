@@ -63,10 +63,10 @@
                                         <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#editModal{{ $convenio->id }}">
                                             <i class="bi bi-pencil-square me-1"></i> Editar
                                         </button>
-                                        <form action="{{ route('convenios.destroy', $convenio->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
+                                        <form id="delete-form-{{ $convenio->id }}" action="{{ route('convenios.destroy', $convenio->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-sm btn-danger">
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('{{ $convenio->id }}')">
                                                 <i class="bi bi-trash me-1"></i> Excluir
                                             </button>
                                         </form>
@@ -122,4 +122,24 @@
         </div>
 
     </div>
+
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "Essa ação não poderá ser desfeita!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, excluir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+
 </x-app-layout>
